@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="軽音アーカイブ">
+<meta name="theme-color" content="#b3541e">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%20%22%E8%BB%BD%E9%9F%B3%E3%83%90%E3%83%B3%E3%83%89%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96%22%2C%20%22short_name%22%3A%20%22%E8%BB%BD%E9%9F%B3%E3%82%A2%E3%83%BC%E3%82%AB%E3%82%A4%E3%83%96%22%2C%20%22display%22%3A%20%22standalone%22%2C%20%22start_url%22%3A%20%22.%22%2C%20%22background_color%22%3A%20%22%23f6f4ef%22%2C%20%22theme_color%22%3A%20%22%23b3541e%22%2C%20%22icons%22%3A%20%5B%7B%22src%22%3A%20%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAIAAAB7GkOtAAAiZ0lEQVR42u3de5RdVZ3g8d9v73Pusx6pPChCEpLw6gQlajNoQoj4ABrFt3Svfq7R0aZdNi5Eu8dZ3U7Pavth0yoorY5Nr7ZfMz092AzPRkBQMQkJIktMgCDPpBJMKiSVqkpV3cc5e%2F%2Fmj1uBKJAXIam69%2FtZLMGVBKpO3fv7nn3OuefoLR9cIACAzuPYBABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAIAAAAAIAACAAAAA2ldibAMAYAUAACAAAAACAAAgAAAAAgAAIAAAAAIAACAAAAACAAAgAAAAAgAAIAAAAAIAACAAAAACAAAgAAAAAgAAIAAAAAIAACAAAAACAAAgAAAAAgAABAAAQAAAAAQAAEAAAAAEAADQBhJjGwAAKwAAAAEAABAAAAABAAAQAAAAAQAATEOJcB0oALACAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAADAy0p4JjwAsAIAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAAgAAIAAAAAIAACAAAAACAABoB4mxDQCAFQAAgAAAAAgAAIAAAAAIAACAAAAACAAAgAAAAAgAAIAAAAAIAACAAAAACAAA4NhIhNuBAgArAAAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAADAsZFwM1AAYAUAACAAAAACAAAgAACA9pGwCQBMLaqH8ZuNC1kIAIB2YSE%2FjGeVO1XlSAYBANAW%2B%2F9ptUfkUBcBMW%2FGZuPwFg0gAACmFucsz9Nqz0VfuTOp9kjIDzzWY8hdWvnpv1%2B74Z8%2FX54xJ4acTUgAAEyLHf3J4a7Oq4iJxLxpeWYxpNUeX%2B4VyQ%2B8DrCYqyv6QonTAAQAwLQa91lDRMwsnxiyGNX5ygnzLMa02mMxiOUHXQFYyDUtmEW2LgEAMK3G%2FZx5IuLSwuJf%2FYRLUpekiy%2F8dZcWxCwpV8WiOHfw%2FwqH%2FgkAgOk47jUpqEpS6dv3L4rSuvonBjYqAQDQ%2FuPesgkTURF1%2Fhf%2BEyAAANp53KtPmPcEAADjHgQAAOMeBAAA4x4EAADjHgQAAOMeBABg3DPuQQAAxj3jHgQAYNwz7kEAAMY9QAAAxj1AAADGPQgAmwBg3IMAADi8ce%2BcF8Y9CADQgXv3jYkhYdxj%2BgaAh2kCh7J3L2bZi%2Fbul%2F7qJzRJXZKewrg%2FTmy%2Fv8AKAHi19u4Z9yAAQBuO%2B%2BxF4%2F5Mxj0IAMC4Z9yDAACMe4AAAIx7gAAAjHuAAACvCstzUcY9QADQefv%2FaVevmDHuAQKAzpn8anmedvX8ylfu9JUetZhUGfcAAUBHrQCqPb7cK5Yz7gECgM5iIRfLJeSMe%2BAocmwCTIc1gE7%2BBYAAAAAIAACAAAAACAAAgAAAAAgAAIAAAAABAAB0ooRHKWNK42nfOJRXCK8TVgAAAAIAACAAAAACAAAgAADQ6XgeAIDjzUxEzMxiVBX1zKVjFQAuncKUngz7%2FS%2FabdxbFBHnE%2FGpiKn4yQc%2BWNb6PYf%2BIuEqUFYAAKbhuJfQHNnl0uLuxx4c3LCm2DPztEs%2B5AtFiZFHABEAAG057n80uGFtWunZtemBnRvvS0rV5thwfWhnqXf2KRf9hi%2BWRSKbkwAAaMdxP7qnsXePOucLRV8oN5tDmqSV2Sel1R52%2FAkAgLYe9z6pzJ7bOvNr0US9iMQ8s5CzpQkAgLYe92Yxz%2Fb7zwk7%2FgQAQGeMexAAAIx7EAAAjHsQAACMexAAAIx7EACAcc%2B4BwEAGPeMexAAgHHPuAcBABj3jHsQAIBxDxAAgHEPEACAcQ8QAIBxDwLAJgAY9yAAAOOecQ8CADDuGfcgAADjnnEPAgAw7hn3IADAlKVOnGPcAwQAHSc263mz5nyBcQ8QAHTM6A%2B5SyuP3%2FqNDf%2F0l6UZJzRGdjPuAQKADhKa9ebeEZ8U1XvGPUAA0EFUnSaJJonlGeMeOFAAeFNgKrPDn9s2ef2P8drulB%2F3Ef1BiIhjEwAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAACAAAgAAAAAgAAaF%2BJmbEVMGWZ2eG%2FRO15bEB%2B3GAFAAAgAAAAAgAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAAAIAJsAADpTYmwDTGEmYkf0R47gD6JFX2ar8uNuwwCwCYCOH%2FkqIqr6wv%2B1n6%2BBiYqImaiYmRjDlgAAmPYTXy1GC8FiiCEXi2ISY1BVERNTkygiziUWg0sLYqbO%2B2LJYlTnWn9cVEgCAQAw5Se%2F86oasqbFEPNMYvDFclLtKZS7qv0nJ6WSiM5YdGZWG0sKJROTGNOu3j1Pbij0zBze%2FJhPC%2FWRXSObN%2FliOa%2BPW7SkXJFo6rxL0hhyEWJAAABMrT1%2Bp87FkGfjoyHPKnNOKnb1lWf1n3zeu3rmnVqZs6DUN7tQ6RLnReTlrg2JeUNFQtZ89od3F7p6akODA6tv2bXpQXUuq41N7Npe7J4hqi4tipnFwGYnAACO7y6%2FE9G8Ph6a9aRcXXj%2B%2B%2FpOPWv%2BGy%2Bs9C9ISxVx6b7fGCQGiZmYmEURfeGsqok6Z2bOezFLypWF57%2B%2F9SunXPibe7c9kVa6RrY%2B8bMH7h5YfUten5jYtd0lqS%2BVXVKgBAQAwPHZ6xen%2BcR4zJv9r18189Sz5r3p4hPfcP7%2BE9%2ByCVEVVRUVVZHW3%2F1L%2FdtUWmEIuVlTRMVMneuef7qIlWbO7X%2Fdm8%2F6rU%2Fn9Yln7rlhcOPanQ%2Bva4zsdj5JShVxjuNCBADAsZv%2BebMWm43ZS89Z8r7LFr75vZoURURCI8agzk%2BeBfaHNQF0MgX7FcJCXUXNzCwm5a6k3L300suXXvr7td0%2F2%2Fy9Gwc3rt3x0GoJufpEnbMYKQEBAPCqjX7nRCQ06jMWn7nkvb%2B3%2BG0fUF%2BU2LCsJqrqnPNH812v6iajIE5CLiIxBud9edbcpZdevvTSywd%2Fsmb91ZePP%2FdsyBpppcf5hINCBADA0ed8kjdqeX38jHd%2F5JyPX%2BXSosSmZRPqE%2FX%2BGKw7Wl%2BDiEjIYgzOJf2vW%2FnOr313cOP67Q9%2Bd2DNrbXdO9JqtygHhQgAgKM6%2Fesju2ee%2BtrXfeizJ53zdufdvtF%2FPN7mqpMliM20q3f%2BinfOX%2FHOk855%2B6PX%2F83wwE%2Fz%2BoRLUhGuGSUAAF75vHW%2BOTayYMXFb%2Fjon%2FYuXCqhLjEen9H%2Foi9t33ljmfemd8x708WjW59Y81e%2FO%2Fz0I75QUufNIj%2B%2B47bTwCYApv3090lz7555yy9e%2BUd%2F37twaczGRZ2oTpmvT9V5dd7yusRmz4IzLvzibcuv%2FLL6JG%2FWdEp9qQQAwHR6D%2FukuXfPyavevfK%2FfiMtVSyfcD6dqssUJ6IW6mm5fMpFv%2F0rV9%2B%2B6C0fbI4NixkNIAAADnff2jX27pm%2F4uLz%2FuibabVqIVOXTP2vWUKwvNa76MzlV1yz%2FMovO%2Bdj3lQaQAAAHPokjXlzwcpLVv3xPzjvJc9a14BOiy%2B9dUTIpe60d374gr%2B%2BpXfBGaFeE8fhIAIA4BBmqMVgFs%2F%2B3c%2F5QtlCU9w0ezurcxLN8lrfacsuuOrmxW%2F%2FtcbIrta3xo%2F32OAqIGBajn8xizG8%2FkOf7Zq7yEJDnZ%2Be34eqestrhe7eN33yGnVu2wN3WQgv81gaEAAAKhZi9YT5S95%2FmUz%2FYanOS8hU5U1XXjt%2F3X9YyERIAAEA8FJ7zRKj88n5%2F%2F0f1XmJeTscM2l9C7E5b8UlYkFiTgGOAc4BANNuVLq8PtG%2F7NyehUva8L46oS7GISACAOClA6AxZCee%2FRZVbzG02ylTdZMLAvU86Z0AAPi58R%2BzrNQza%2BF57xIJbpqe%2Bz0oC%2FtiQAMIAIDJ%2Be%2FyxsSc1y4v9My2kLfvFZMqFsSEdQABAPD8XJQYsnnLL3JJsQNurG9ixvwnAABERGLIi90z%2Bxa%2FRiS2HsbS%2Fg1wXKxIAACIqPdZbe%2FY9s0iHXN83CKTigAAjH%2BNIS%2F2zJp1xhtEOucOmtwrlAAAsNZJ4Fptz3Mi2kEHx%2FlkwKsj4fwKpvbEO5IpZ0f6B6f8CkBillX7F%2FSd8hqR0En3T7YDHPJq2x83KwAAP5cA57Ox4frwrg7bI1YRzgQQAByjt5uKqjo3%2BZf3rUf6qfPq%2FQv%2FV506x3M8juV%2BsDqfTYyPD24VccYT1fHKcH0V9k18EVUVUYvRQrAYYsjFopjE2DraYGatHTFxLokx%2BLRgZs55XyxZjJMP%2FItRVITZ9OoUQJ3PJmojWx8%2F8Zff2nkbOYr6yQ8JgwDgqBxSUNWQNS2GmGcWQ1IsJ9WeQrmrq%2F9kXyqJ6IxFZ%2Ba1MV8oiZjFWOjqHXpyQ7Fn5vDmx1xaaIzsGt68yRfLeX3coiXlikRT512SxpCLEIOjfCzEYqgN7Zg8LtKBiyAQALziPX4nzlnIs%2FHRkGfVOScVu%2FpKs%2FoXnveunnmnVuYsKPXNLlS6ZPJWMy99qDDmDRUJWfPZH95d6OqpDQ1uWX3Lrk0PqnNZbWxi1%2FZi9wxRdWlRzDrgY6vHaAA6n%2Bzdvrl1PKjzvv0oomSAAOCId%2FmdiOb18dCsJ%2BXqwvPf13fqWQveeGGlf0FaqohL9%2F3GIDFIzMTEfuFdZ6LOmZnzXsyScmXh%2Be9v%2FcopF%2F7m3m1PpJWuka1PPPvA3QOrb8nrE%2BO7tvsk9aWySwqU4JUOQDOXJKNbn8xqY2mpJDF22DXyKuo4CnT0AkBKO%2BAt8%2FzUFtW8Nh7z5omvXzXz1LPmveniE99w%2Fv4T37KJyTPAoqIq0vq7f6k1hE7ujoXcrNl6SKE61z3%2FdBErzZzb%2F7o3L%2FutT%2Bf1iafvuWHnxrWDG9c1RnY7nySlygt3eTzoy%2B8Iru%2Bz9r4wMLq0NLr1iT1PbjzhrHPNai%2F502nnFZDoL%2ByOcB0oKwAc8C0zeRfJWmw25iw955fed9mi89%2BrSVFEJDRiDOr85Flgf1gvCZ1MwX4zyEJdRc3MLCblrqTcfeall5956e%2FXdv%2Fsme%2FduHPD2u0PrZaQa5KocxYjZwgO96epzmWNxnMPrzvhrHM7cgsEUe4QRwBwiEPaOREJjXrf4jOXvO%2F3Fr%2F1A5oUJTYsq7Wu9XT%2BaL4MWncoU1UVJyEXkRiD8748a%2B6Zl15%2B5qWXD25Ys%2B6Ll48%2F92zIGmmlx%2FmEg0KHOQGjLxSf%2BPa%2FnPaO3yn2zhLrsKcntq5E49pjAoCDcj7JG7W8Pv5L7%2F7IOb9%2FlUuLEpuWTahP1L%2F6hw5UW1%2BDiEjIYgzOJf3LVl7y9e8Obly%2F%2FUff3bL61trQjrTaLepYChzq%2FDdzSdrYO1wb3lXsnW3R1GlHff8iGkMWQy4utxh5SRz5fGATtPf0r4%2Fs7pl3ytv%2B7P%2Bec%2FlVLnGWTYiI%2BuMRflXnE1GR0Ey7eueveOc5n%2Fjiik99uX%2FZSpcWY561zj3wUzukbel9c2z4sRu%2FIepEOy%2BcPnFpJSn1OJ%2Bk5SofiGMFgBfNCOebYyMLVlz8ho%2F%2B6YxFSyXUJcbjM%2FpfvCyYPG8s85a%2FY97yi0e3PrH68787%2FPQjvlBS583YpzvYTnAIablry703L%2F3Ax3pPXmKh2TrQ1xG7%2Fy6p7d7xzN3%2FFvKm%2BsLODWuTUoV1AAHA%2FnuISXN0aMG5l5z33%2F42qXTHbNz5dCp9fZPnjS2vq9OeBWdc9KXbBlbf%2FKP%2F%2Bdm8MZEUytZ6FBQOsAmTpDE6%2FOi%2Ff33Fp7%2FaWVfAqPhC8eFvfW18cMAlBV8spaUKOw1HeJCATdCGP1SfNPfuOXnVu1d%2B5htJuWL5xNSa%2Fj%2B3THEiaqGelsunXvTbF19z%2B%2BK3fLA5NizGLeAPvggoVLs333vj8OaHNSl3yIl0MxPxw5s3Wciqc%2BaV%2B07gEBABwP771q4xumfBiotX%2FfE302rVQqZT%2Fol6qk5CsLzWu%2BjM5Z%2B8ZvmVX1bnY97kNnMHy6cPjfpD3%2FyL2tBOUd8Rc1BFxMp9c1xSCHkzRk4CEwDsN0lj3jz5vEtWffYfnPeSZ9Pm0LCqOm953aXu9Es%2BfOEXbuldcEao18Q5lgIvuzscQ1rt2bL6lkev%2F4r6gnTCIsBMRHc9%2FuPG6G7nE44TEgC8MEMtBrN49mWf84WyhaZMtxOD6pxEs7w287RlF37h5sUX%2FFp9ZFfrW%2BPH%2B9LzMOTFnr6n7vrX8Z0DmlY64ECQisTuuYvSSrcFPj5CAPD8G8MsxvD6D3%2B2a%2B4iCw110%2FMOAZNLgVqhq3f5J69Z%2Br7LzKIFngh4gGr6vD6x%2Fporsom94hJp69OhZlHE7Xn6kcbokPNcw0IA8Pz8j7HrhPlL33%2BZTP9hqc5LyFTj8iuvXX7FlyxkIiTgZWZijL5Y3nb%2Fd37yz59Xl7R2Bdq4djFvPLv%2BLudTjv68ciS0Pd4WKjE6n7z5T%2F5RnZeYt8Mxk9a3EJvzV1wiFiTmFODlGxBKvbN%2FevPfWcjP%2BfhfWWiqtONxMzP1SWNox%2BDD65Mil36yAsDkqHR5faJ%2F2bm9C5e04VHgUBfjENDB1wFJsbzphq8PrLlVk9Lko3jaS4xBxG9ZfVtjdLdLU84AEwC0AqAxZHPPfouqtxjabdev9dgTVVHPPX8PtHssUujuW3f1FVu%2Bd4MrVNttB9lMnTcL2x%2F8vvMp1%2F4TAEyO%2F5hlxZ5ZC1e9SyQ416Z3h289A%2BT5BwngJROgGkO29kuf2PKDm9SX2qwB6vzIlscGN9yX8NFfAoB989%2FljYn%2B1y4v9My2kLfvFZMqFsSEdcCBG%2BB8oqr3feHjW75%2Fg%2FqSWVvcVMNMXGIx%2FOBzH4ohF8e9YwkAJueixJDNW36RS4odcBm4ifEwkANuoBidT0R03dVX%2FPDaT5k48el0f2G0fuCbbrxubOc2dY4XAAHApBjyYs%2FMvlNeIxK1I54SbuK4eu3Au8vR%2BUSd23Tjdfdf88nm2MjkzYKm516zxaC%2BOLZ980P%2F8OfOeVEeCk8A8PwKwPtsYu%2Fe7ZtFOub4uEVeugdtgImUZsx%2B%2Bp7rv%2FOH7x16coMmZXE6%2Fe6cE6P6QmjWHrzuT1SdOs%2FBn6MoYVtO7%2BmvGkNe7Jk1%2B4w3iHTOHTRN9GWPA%2FCQcGk9NN1MLPhieWTr49%2F5w%2Ff88kf%2Fx6kX%2FoYrlCyvqU6POyxZjJqkMQ8%2F%2BPMPb73vjmJXb7TI%2Fj8rADy%2FoyeiLmvUanueE9EOemfwyYCDFHJfC800KcQY1l3zyXVfvnJk86OalMVPg6fuWMzVp9n4%2BOq%2F%2BC9b191R7OmLFoXpTwCw%2F55ezLPK7Ll9p7xGJHTS%2FZONABzGboJqoWvGM9%2B%2F4Y4r3%2FnUXf8rq9XUl0Rsyh4RiiHTpJLVJtZc9bEtq28tdPe15UfbCABecQKcz%2FYO14d3ddhAVBHOBBxGA8xiUijHkK%2B7%2BpN3ffpdo1sfF1fQpGQxTK3zw2Zi0aXV4c2bVv%2FlR7atv6PQ3WdMfwKAl9wPVuez2vjY4FYRx8cjccDRGsU5X6oMDzz%2B7SvfceenLtm2%2FtualDUpy9S4t76FXJyLplvvu331X35k67o7Cl29HfKws%2BOCy%2Bmm%2FZtanc8maiMDj8%2F95bd23gUSUdRPfkgYh7h%2FLeKSNGaNwQ1rR7c9tXDVPXP%2F09v6z1pe6OqTkMWY77vU8liPfvWJppWYNX74tc%2F89Na%2FT0rVUu8sjvwQAByQisVQG9rR%2BudOXAThSDKghe6%2BrD6%2B6ebrHr%2F9n6pz5q34g6%2BeuOw85wsiUWIWw77biryaMbAYxUy907RieeOZe%2F7Pppv%2BdviZTcWemSLC9CcAOPgAdD7Zu2Pz5MWRHfftx9ZFj7wQDn%2FLBXWu2DNTYqzt2fndz%2F763Nev6l%2B2cvFb31%2BedZJzrbMsFrOGqlNVEzs6nzQ0MxGLwTmvSUlELG9s%2Ft71m266btemB1yhmBTKPOmXAOBQ300uSUYGnsxqY2mpJDF22AMUVdRxFOjIXz0hiIj6RGLctv7OgbX%2FseFfv9j%2F2hX9Z6085YIPJqVKUu5t%2FVYVldCwyReY7fswwSFcjmVmk%2FfwMPWJ%2BETFqxcR2fHje7fdf8fQkxu3P7TaJ4VCT59E40ZvBACHsSPnCqXRrU%2FseXLjCWeda1ZT9R31%2FYsoi4BXXgJRTas9ohrz5rb1d25Zc9sj37o2KVUWvvk9J51zwYwFp2cTY93zT9%2FvxRUkBlFnIaiqxbhfCJ4vhIhoa%2BJP%2FkrM8omx8cGtW%2B%2F%2Fzp6nNg6suz2vjftCqdjdJ2I85pcA4PD3gdWFZmPnw%2BtOOOvcjhxeQZQ7xB2VfYnQejml1Z5UNauNZRN7f%2FIvX3js5r9Py11mcc6Ss09e9Z7KzP7m%2BOi8N17g04KJuaQkrZu0%2FqIoIhJDc2y0vmfX%2BHNbR7c9NbDmttrQYGPvnvGdP3Npmparpd7ZFiOX%2BhAAHPkb1xeKT3z7X05%2Fx%2B8Ue2eJddjTE1sHq%2FlY2FEvgU9EpDJ7bsyzrLZXVLeuv3Pb%2FXf5Yik0ajMWLS31zg5Zc8biJY3RoZmnLcvGRkSdiIZmPS137dn8qIiFen1scKBZG8vHR%2FNGTZ13SarOl%2Ftmm5nFwJleAoBXuHw3l6SNvcO14V3F3tkWTZ121PcvojFkMeTics4fHtUNKzHPno9Boau39fnhtNozuu2p4YHHVXXw4XXO%2Bc3fv6m1emjdk8rMnPOiIuqcT9R59Wmhq9j6TJpwhQ8BwNHcCfa%2BuXf4sRu%2FsfzKa0U772iIT5xPXSoikparfCDuVYqB7TvZbjH6QtGriklSrr5wJtj2W5bt%2BylM%2FjjMOM5DAPDqvD1DSMtdz9x789IPfKz35CUWmuo645JQM3FJbfeOp%2B%2F%2Bt5A3nS8MbliblCqsA47BunNyxDPVCQCO%2FyIgSRqjw4%2F8%2B9fP%2FfRXO%2BuSGBVfKD78ra%2BNDw64pOCLpZRnxgKHgHsBtdUioFDt3nzvjcObH558AlSH7IeKH968yUJWnTOv3HcCh4AAAtCRiwDnQ6P%2B42%2F%2BRW1op6jviDmoImLlvjkuKYS8GSMngQEC0JmLgBjSas%2BW1bc8cv1X1BekExYBZiK66%2FEfN0Z3u6lxS0uAAOA4zcOQF3v6nrrrX8d3Dmha6YADQSoSu%2BYuSivdfI4UIACdTp3P6hPrrrkim9grLmnv06FmUcQNP%2F1IY3TIeS5qAAhAhy8CYkyK5W33f%2Bcn%2F%2Fx5dYmItvGBEXU%2B5o1t6%2B9yPuXoD0AAIBZDqXf2Yzf%2F3QNf%2B4y69IVLtttu%2F1990hzdNfjw%2BqTIpZ8AAcB%2B64BHb%2Fj6wJpbNSm15SfvYwwifvPq2xqju12acgYYIADYt3ssUujuu%2B%2FqK7Z87wZXqLbbDrKZOi8Wtj%2F4fedTrv0HCAB%2BPgGqMWRrvvSJLT%2B4SX2pzRqgzg9veWxww30JH%2F0FCABe3ADnE1Vd%2B4WPb%2Fn%2BDepLbXI%2BwExcYjHc%2B7kPxZCLcxz%2FAQgAXjQqY3Q%2BEdH7rr7i%2Fms%2FZeLEp9P98wGtYf%2FojdeN7dymzvE0GOAI%2BA%2F%2BUg9boRMq4JxX1R0Prant3tG%2FbGVS6rbQVNHp%2BABhi0GT0tj2Z%2B793H92PhHneB4kcCQB%2BAAB6JACiJlqUq7ufuKhZx%2B4e86Ssyuz54tGi1GnVwNiVF8IWWP9l6%2Fcu32zcvoXYAWAQ%2BuAuSStD%2B985p5vFbt7%2Bxa91qWlabQUsBg1SWMI9%2F7ZhwbWfjspVTn3CxAAHAb1iVnc8oObx5%2F7Wc%2B8U8ozTxInFsMUXwpYzNUXsonxNVddtuW%2B20s9fTxhCiAAOIIIaFIoDz214em7ry%2FPnN190qm%2BUBXLLdrUzEAMmUurWW189VUfG1h7W7FnpvFQWYAA4Ih3qX1SsBgG1tz27AN3n7hsZXHGCepSC00xm0IHhcxETJPK8OZN679y5bP331XomsG%2BP0AA8EqHqzjnkrS257mn77l%2B2%2Fo7S70ze09eqi4VpxLjcW%2BAhVx9EqNsW3%2FXD%2F%2FmD3ZsuK%2FIkR%2BAAOAoUu8t5CPbntzx0JqxHVss5uW%2BOb7UJTHGmKseh9WAhVyd06QU8%2Fz%2Br33mgW%2F8UVYbL1R7Ikd%2BgKP1xv%2Ff75nPVsDkq8H5GPJsYtSnxeqceSv%2F4Kv9y84TEZEoMYshOOdF5FWNgcUoZuqduKLljae%2F9%2F823fS3w89s8sXS5K8CIAB4dV4Rqs5JjDHkom7u61f1L1t5ylvfX551UuvZWyIWs4aqU1UTUz0aHyY3MxGLwTkvvigiljeeuffmTTddt2vTA65QTAplLvcECACOXQkkxqw%2BYSEv9s7sf%2B2K%2FrNWnnrBB5NSJSn3tsa2iEpo2OSpAlN1rX9oPan9YBPfxKx1Q39xXsS3fmX7j%2B%2Fddv8dQ09u3P7Qap8UkkpVojH9AQKAY%2F76cF5UY97M67WYZ9XZc5NSZeGb3zPvnAtmLDg9mxjrnn%2F6fr89SAyiaiGoqsW4XwieL4SI6P4TX2KW1yfGBrduu%2F87Q09tHFh3e1YbTwqlpFQVMY75AAQAx78Eqhqyhpg19g4Xe2am5S6zOGfJ2QtXvacys78xPjr%2FjRf4tCAimhRf5l8TRURiaE6M1ffsGn9u6%2Bi2p7asua02NNjYu2d8589cmqblqvOJxcheP0AAMKVeLyoizicxzywGUc1rE6rqi6W8UetbtLTUOztkzRmLlzRGh2adtqw5NqLqRDQ060m5a8%2FmR0Us1OtjgwNZbSwbH80bNXXeJak679OCmXGJJ0AAMD1ioOpaB2rUudCoxxhUNWRNdd5i63pNJ2oqambqvKqIOucTdV69n%2Fzjrbu5cU834NhKuI0ujpCZqFgMrQP9FqMvFL2oiCSl6sv%2Bkcm%2FT058s%2FDCOWNeisCxDgBw5A34ucHdupjzyP89AI4tnggGAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAcHwl3IYLAFgBAAAIAACAAAAACAAAgAAAAAgAAIAAAAAIAACAAAAACAAAgAAAAAgAAIAAAAAIAACAAAAACAAAgAAAAAgAAIAAAAAIAACAAAAACAAAgAAAAAEAABAAAAABAAAQAAAAAQAAtIPE2AYAwAoAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAvKxGeCg8ArAAAAAQAAEAAAAAEAABAAAAABAAAMA0lXAUKAKwAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAAAAAQAAEAAAAAEAABAAAAABAAAQAAAgAAAAAgAAIAAAAAIAACAAAAA2kFibAMAYAUAACAAAAACAAAgAAAAAgAAIAAAAAIAACAAAAACAAAgAAAAAgAAIAAAAAIAACAAAAACAAAgAAAAAgAAIAAAAAIAACAAAAACAAAgAAAAAgAABAAAQAAAAAQAAEAAAADt5f8DOzBsCB%2F8HGAAAAAASUVORK5CYII%3D%22%2C%20%22sizes%22%3A%20%22512x512%22%2C%20%22type%22%3A%20%22image%2Fpng%22%7D%2C%20%7B%22src%22%3A%20%22data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAANy0lEQVR42u2de2xcV5nAv%2B%2Bc%2B5iZOw%2BPn3FsNy%2BnLSVpEiiQtKWwtKBWRaVQxB8UtdtdiaKVdiVYVVAEFaKqQOxqpV0hBWlBIAQrRCmFFtpQEDSUpG0K7TaNkrSOTTJjJ37Er%2FHcedx7z%2Fn4Y8bGTpwmccbz8Hw%2FzT%2B24snMnN98r%2Fs4%2BNQ9fcAwyyH4I2BYDoblYFgOhuVgWA6G5WBYDoblYNY6BvFnwHDkYFgOhuVgWA6G5WBYDoblYFgOhuVgmhWekDIcORiWg6lkWgHOKwxHDoblYFgOhuVgWA6G5WAaq5XlTpbhyMGwHAzLwbAcDMvBsBwMy8GwHAzLwTQtPCFlOHIwLAfDcjAsB1PbgpTPPmc4cjAsB8NyMCwHU9OClOvRugURARd%2Fe4m0rm63wtSnGEIoL6%2B8IiACAQChEEbIYTmaMUQAIiACEZEmrfy5TGLjtdH1W4ACAAQU2sufPf4XIGI5mkkFFajA14FPWiEKaYfseHukbf22%2Bx7uvemuhb8rTp955rM3UeADCqjKeIrlqJ0KSqEQ0g5ZsWS4rTvavTHW2x%2Fv7Y%2Bu3xTp6AklOwCQgjwAEmmUoSDvVrsg5eWrclSwoslwe3e0e2O8tz%2FW1x9bvznS0WMn2kGYi2tP0D6ARiFLP6EQKATLseZUaFvndG%2BI9%2FTH%2BrbG1m%2BKdPaGWtpBWOeoQEEeiAAQELH0nIA1bmV5iVclQfRsifX2l1VItIO8uArlIFFXcw5e9JVHhXkVLpogKCgA6TpXgeW40gRRjgp9W2M9m8tRYRkVzo8KohGH0U05IV2qApDWKtBLEkTYirVE2rqddRvivf11kiBo%2FsGRY7WsIIBlE0SkvTu6bqGZ3Ox09tiJtuXKxoZMECzHxdUIvAICWrH5BNHbH%2B%2Frj63f7HT22i3tgGs2QbAcbyuGkL6b2XLn%2FZs%2F8plwa0c42bVMglAN0EGwHKsSNrTvJTe%2Fs%2FXqdwH5QNRUCYLluIS0UsyT1hB4aJhNlSBWRnN9OogChQBEXniWg7nCtNIkg44qjwhW%2FjqJAIA0EIEQiKKG74InpHXgAunykgtEYSAuWhTt1TJyNM%2BElOpLBQIUKCUumb6DLrr56ZQ7PjwzeCTZf33Htj2k%2FIWjszwhXVNBYWlUOE8FP1eYGsmOpuaGBzPDA3PDg9mxVGF6PCjkcuOj7%2F38f3ZsvxmoCFib0pDlqFaCANBerjA9kh1LzY0MZdIDcyOD7mgqPzXmuxnlewAgpBSGhYZhhBy7JWnYEZ5zNLoKb5Mg0u7fVRhyx1L5qXHfnVW%2BB0AoDWGYwjCNkGNEovNpQxNB6bAwkWY5GjEqnKeCl8tPDbtjqczw4NzwQGZ4yB1LFabHl0YFE%2F%2BuQumAcAkNqj5bWeZSEoRYJkG4Y6nMyNBceiAzMpgdTRUukCAWRYW6VoHlWFlUcPNTCwnixNzI4PkJQi6JCksSRKOowHKcB4rlVBh2x8odRGZ4yB1LF6aXRAVcUis0QIJgOVaC9v2FBJFJzzeTay5BsByXlUs0Sjs3ntr%2FyL35yTO%2BO6f8IgAJaYhlEkRTqLCMHE08IUUK%2FLnTf0UEGXKMiAOANJ8gdK1VoAv8kiekVSs4UFq2VgGRJsU3oziXZj9kXwoV7AHLwbAcDMvBsBwMy8GwHAzLwawFDGqSLr88Al%2F%2B13V3cnr5ZdH5v9ZEWK1Xy5GDYTkYloNhORiWg2E5GJaDaTD47PMqs3BrEGI5GEAhAEXp9qagNZUEKd1eYf62p%2FV5wlFTX2W%2F2pNRlJKU9nNZHXgoDGnZ0rKFkKSV8j1VLJAOUEhph6VpAwBpBW8bWPgc0jUSLUhrLzMtQ5HObXs6rntP29U7nY4e04mhNEgFfm7OHR%2BZOXV8evDI5MDrufE0EZmRGAq5WBFOK2vODCmDvCuksfWjD%2FTffl%2FbNTuXLfxbr76h7%2BaPAYCXOTtx9JWTz%2F88feBXfm7OdOLV3z2D5ahOzJC%2Bm4n3bX3fv%2F1X5%2FabAABUkbQqb5GxpB4lIAIUVjzZs%2FuOnt13TJ94%2FdiT3zn1%2FM%2B176Gs%2FdJwK1tpM%2FLZ1q07P%2Fytpzq330R%2BjoICIKI0UEgUAnH%2BIQQKidJAIUAFFOQpKCT7d9z40N4PPfZ4ctN1xcwMomA51ooZiMorOO3r%2F%2BHr%2FxdKdpGfK6%2F9pfylkCgEBQUK8l07b7ntP57uv%2F3TfsGt7TvitFJJO7Tv7frnr4aS68h3UZoraXoBKMgbofAHHvm%2BO3EaKEAhqUZDEY4cFTMjKOQTG6%2B96ua7QHvnXLl%2FubkJlA8ATtdGIKrhLXVZjor1rsorrNvxfjRsUupKd2dDBCBQRQCq4U5vRgN%2FVcu75AHg%2FGyodGpdbaaNCEDhZMdCK1KBJ8TFT14LOajxvqMSAEgFgVfUKlg8kBbSEIYlDANREOlzdn6nCw9JKwIBoGGuwjumC%2F7AkWOxFqSVl50BACuWTPZtjbSts6IJYVg68D13Njdx2p0YKWamdOBJ05ahCKKo1sCRADB75lQNv%2BjNKwcK6bmzhh3pu%2FHOjR%2B4u%2F2aXU5XH0p7yfqoYn5ydDZ9YuzwwTOv7Z8efEN5xSoNHDUJw5w5dRx0gHIV9m0hIqWqLkf95xVEBCxmpvp2377jvodbr941vx4eqcKiCgNRykjnhkjnhu5337rz%2FofH3jh4%2FMn%2FHXnld9ovWvHW5b%2FQFcorRNqwI5NvHZ5Nv5W46lpSXkWNJEC0E618Y%2FzzCz3w3MyuB766%2Fd6HSmOA%2BXq0dNR76ddLF0tbDqA0unbc0rXjlvEjLx7%2B0bdGX90PpFc1hKCUXnbqxL4fv%2FvBx4B0pTpBIo3CnB48fOzJ7xARIlZNkHpvZVFgkMve8Lmvb7%2F3odIAEYVEIS80WsbStFEaAFD6953b9tz2zSdu%2BJdvkKagkF%2FFokNpy4kPPPPDmaHDaEYqVutoApSTb7127Gd7ec6xtM7Izm744Mffcc%2B%2Fkp%2FHy9yGrXT8goI8Kf%2Faux%2B89Rs%2FjbR3l0L0KumB0gjy7qFvf0n7RUBZoftTExD5uYwVa6nyQKyu5dAqsKKJXQ98mUjDwlTj8g1DRAryvXvu3HTrp0D7q7fRH2llRhOjhw%2B8%2FN9fQGkBiHPa6RUtkQDEkVd%2Bj4hQ3buhizoOGyIouF3X3xjt3gL6Sus7FJKCAuhgtftMUoEdTw48%2B6ND%2F%2FMFFAYaFqngSp4NZWjiyIHxN140IlFiORbWk4Kgdct2AACtK2LbwkBilf1Qdjx5%2FJff%2FcMjn85PjZfqjxWEENIKDVsVc6%2Fs%2FYpWASJWubUUtOhUyrp7IBiR2CoNrBZ3shV%2FaK3sRFv6pX37Pn9H6k9PoxFGI0SkSatLme6XttRAI6y84v5H%2F%2FHswP8bkajWusqff713K0E%2B26DjRa0CK9aSmzi9%2F9H7n%2F%2FaZ8aPHEQZQiMM0ixvp6IVaU00%2F9CatCpts4IyhGZkeuiN337x7uGXn7OiiepPwOp8zkEoxGz6RKlDXZ3%2FYXXDNCklrZDEUOrgr4df%2Bk3Pe2%2FbfOunurbvDrV2w9vWxDMnjw4%2B95OBZ3%2Fo5%2BasWEtNzKhvObSWVmhy4PUgN2uEHSifhlnRnLoqx8nOTRBAYDkJIEq%2FtC%2F94rORtu7W%2FuuTW7a1bn5ntKvXdOLCMEkpP5fNTZ6ZPHF44uifJ44e8rKzphM3I7FamVHXchCRtMKZ4cHR11%2Fo3fNR0n5lj1lo3yvMnK3Se9EKACwnAQBednb40HPpF59BIaUVkqaNUpLW2i8GXpGUL6RphB070VpKNDVcgjqvOQiFOPrEXtBBBcMGaYXSTh%2F81b5%2Fv2s%2BZ1F1FCGt0DAsJ2En2q1oizCt0gVOpAKUpuXE7ES76cRKKanml8HVtRyktenEzrz2wptPfQ%2BNkA78ijUrAJ4762VnanB0nahceJY6l%2FIRIgFApEuFqq6Tz7%2FeuxXS2nTir%2F7gsYljLwvL0aoSfiABwMzJYyjr4aA01e1e6nV%2FDimRkFJ5xf2P%2FtPsqWPCvGI%2FiADNoDA3%2FPJvDTsMpIFpVDkASGvDDhemJ3738CfHDh8QpkNarzj2ahWgNI8%2B%2Fu3MyJC0Q8T7aVwY%2BYlr4g3gB5Ewbc%2FNnHz%2BCSPsdFy3G4VBygMCvPRClYi0EpYzcug3h%2FZ%2BWdohFuMictzTCHKU84tpAlHqwK8n33w13tvvdF6FwgAdlPo9hAvMykr3e9UKDRullXrhF3%2F85oMAIIRsiDuosByXXC4IYdiRmZPHh37%2F%2BGzqzUhrp9O1AaWJwgAhQCsiDZqgfDsUAgCUJgoLpZmfHH3tB4%2F9%2BbtfK%2B3yxwnl4oX7j%2B%2FqbbwXXT4NfdaMRDve8Z6eGz7UtX1PvGeTFW8%2F%2F4irl52a%2Bevxky88lfrT09nxtB1tIQDeumvNylF%2B6VKSUkEhp3zPDDvhZGds%2FUans8%2BOJ6Vp6SDwsjPu2TOZ9IB79rQqFsywIyy7htPohsNo3LRLgQIAMxw1I4K0yk9PuOMjWgXzCQVLV69LyzLMkGFHSOvSnzCXLEeDQ1oDaAAQhilNa%2F4qwvmJOAGRJiLggNGEcpzblTCVg6%2ByZ1gOZgVphQMxw5GDYTkYloNhORiWg2E5GJaDYTkYloNpWnhCynDkYFgOhuVgWA6G5WBYDoblYNYKBl8RyHDkYC4%2FcnDgYDhyMCwHw3IwLAfDcjAsB8NyMCwHw3IwTQtPSBmOHAzLwbAcDMvBsBwMy8GwHAzLwbAcTPPyN%2F%2Fh9aVIRkdJAAAAAElFTkSuQmCC%22%2C%20%22sizes%22%3A%20%22180x180%22%2C%20%22type%22%3A%20%22image%2Fpng%22%7D%5D%7D">
+<title>軽音バンドアーカイブ</title>
+<style>
+:root{
+  --bg:#f6f4ef; --surface:#fffdf9; --surface2:#efe9dd; --text:#2b2620; --muted:#7a7264;
+  --border:#ddd5c4; --accent:#b3541e; --accent-soft:#f3e2d3; --chip:#efe9dd;
+  --danger:#b3261e; --ok:#3d7a3d;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#1d1a16; --surface:#2a251f; --surface2:#352e26; --text:#ece5d8; --muted:#a89c88;
+    --border:#4a4234; --accent:#e08a4c; --accent-soft:#4a3421; --chip:#352e26; --danger:#e06a5f; --ok:#7fb87f; }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.55}
+header{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--border);padding:10px 14px calc(8px + env(safe-area-inset-top,0px));padding-top:calc(10px + env(safe-area-inset-top,0px));box-shadow:0 2px 10px rgba(0,0,0,.06)}
+header h1{font-size:16px;margin:0 0 8px}
+nav.tabs{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{flex:0 0 auto}
+nav.tabs button{border:1px solid var(--border);background:var(--chip);color:var(--text);border-radius:999px;padding:7px 13px;font-size:14px;cursor:pointer;min-height:38px}
+nav.tabs button.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+main{max-width:860px;margin:0 auto;padding:14px 14px 120px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px 14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.card.clickable{cursor:pointer}
+.card h3{margin:0 0 4px;font-size:16px}
+.meta{color:var(--muted);font-size:13px}
+.chip{display:inline-block;background:var(--chip);border-radius:999px;padding:2px 9px;font-size:12px;margin:2px 3px 2px 0}
+.chip.accent{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.chip.warn{background:#f6d9d5;color:var(--danger)}
+.badge{display:inline-block;border:1px solid var(--accent);color:var(--accent);border-radius:6px;padding:0 6px;font-size:11px;margin-left:6px;vertical-align:1px}
+input[type=text],input[type=number],input[type=date],input[type=search],select,textarea{width:100%;padding:10px;border:1px solid var(--border);border-radius:9px;background:var(--surface);color:var(--text);font-size:16px;margin:4px 0 10px}
+textarea{min-height:74px;resize:vertical}
+label.flabel{display:block;font-size:13px;color:var(--muted);margin-top:8px}
+button.btn{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:9px;padding:10px 14px;font-size:14px;cursor:pointer;min-height:44px}
+button.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+button.btn.danger{color:var(--danger);border-color:var(--danger)}
+button.btn.small{min-height:40px;padding:6px 10px;font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row>*{flex:0 0 auto}
+.row .grow{flex:1 1 auto}
+.actionbar{position:fixed;bottom:0;left:0;right:0;z-index:30;max-width:860px;margin:0 auto;background:var(--surface);border-top:1px solid var(--border);padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;flex-wrap:wrap;box-shadow:0 -2px 10px rgba(0,0,0,.06)}
+.backbar{position:sticky;top:calc(88px + env(safe-area-inset-top,0px));z-index:18;background:var(--bg);padding:8px 0;margin:-4px 0 10px}
+ul.plain{list-style:none;padding:0;margin:6px 0}
+ul.plain li{padding:7px 0;border-bottom:1px dashed var(--border)}
+ul.plain li:last-child{border-bottom:none}
+a{color:var(--accent)}
+.songnote{color:var(--muted);font-size:12px;margin-left:6px}
+.memberrow{border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:10px;background:var(--surface)}
+.partchecks{display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 8px}
+.partchecks label{font-size:14px;display:flex;gap:4px;align-items:center}
+.partchecks input{width:18px;height:18px}
+details{margin:8px 0}
+summary{cursor:pointer;color:var(--accent);font-size:14px;min-height:32px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+@media(max-width:560px){.grid2{grid-template-columns:1fr}}
+.notice{background:var(--accent-soft);border-radius:10px;padding:10px 12px;font-size:13px;margin-bottom:12px}
+.kbd{font-family:monospace;background:var(--chip);padding:1px 6px;border-radius:5px;font-size:12px}
+h2.sec{font-size:16px;margin:18px 0 8px}
+.empty{color:var(--muted);text-align:center;padding:26px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>軽音バンドアーカイブ</h1>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+<main id="app"></main>
+<script>
+"use strict";
+/* ================= 初期データ（ライブのみ収録） ================= */
+const SEED_PEOPLE = [];
+const SEED_EVENTS = [
+{"id":1,"name":"202406新入生ライブ","startDate":"2024-06-27","endDate":"2026-06-28"},
+{"id":2,"name":"202409脇フェス＠河原町今日モ今日トテ","startDate":"2024-09-22","endDate":"2026-09-22"},
+{"id":3,"name":"202410若鮎祭","startDate":"2024-10-26","endDate":"2024-10-27"},
+{"id":4,"name":"202412クリスマスライブ","startDate":"2024-12-09","endDate":"2024-12-11"},
+{"id":5,"name":"202503追いコンライブ","startDate":"2025-03-08","endDate":"2025-03-18"},
+{"id":6,"name":"202504新歓ライブ","startDate":"2025-04-28","endDate":"2025-04-29"},
+{"id":7,"name":"202507新入生ライブ","startDate":"2025-07-04","endDate":"2025-07-04"},
+{"id":8,"name":"202509脇フェス＠河原町今日モ今日トテ","startDate":"2025-09-20","endDate":"2025-09-20"},
+{"id":9,"name":"202510若鮎祭","startDate":"2025-10-25","endDate":"2025-10-26"},
+{"id":10,"name":"202512クリスマスライブ＠部室","startDate":"2025-12-09","endDate":"2025-12-10"},
+{"id":11,"name":"202506三大学合同ライブ＠浜大津B-FLAT","startDate":"2025-06-08","endDate":"2025-06-08"},
+{"id":12,"name":"202508PEACEジョイントライブ＠BKC","startDate":"2025-08-28","endDate":"2025-08-28"},
+{"id":13,"name":"202603追いコンライブ","startDate":"2026-03-28","endDate":"2026-03-29"},
+{"id":14,"name":"202604新歓ライブ","startDate":"2026-04-29","endDate":"2026-04-30"},
+{"id":15,"name":"202607新入生ライブ","startDate":"2026-07-01","endDate":"2026-07-03"},
+{"id":16,"name":"202608OBOGライブ＠瀬田L.Q.(えるく)","startDate":"2026-08-23","endDate":"2026-08-23"},
+{"id":17,"name":"202608PEACEジョイントライブ＠京都nano","startDate":"2026-08-24","endDate":"2026-08-24"},
+{"id":18,"name":"202608京薬ジョイントライブ＠浜大津B-FLAT","startDate":"2026-08-30","endDate":"2026-08-30"},
+{"id":19,"name":"202609琵琶湖爆音大相撲＠祇園EN-LAB","startDate":"2026-09-26","endDate":"2026-09-26"},
+{"id":20,"name":"202610若鮎祭","startDate":"2026-10-24","endDate":"2026-10-25"},
+{"id":21,"name":"202612クリスマスライブ","startDate":"2026-12-08","endDate":"2026-12-10"}
+];
+const SEED_BANDS = [];
+
+/* ================= アプリ本体 ================= */
+const LS_KEY = "keion-archive-friends-v1";
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+function loadDB(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(raw){ const d = JSON.parse(raw); if(d && Array.isArray(d.people) && Array.isArray(d.events) && Array.isArray(d.bands)) return d; }
+  }catch(e){}
+  return { people: clone(SEED_PEOPLE), events: clone(SEED_EVENTS), bands: clone(SEED_BANDS) };
+}
+let DB = loadDB();
+function saveDB(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(DB)); }catch(e){ alert("保存できませんでした（容量不足の可能性があります）"); } }
+function nextId(coll){ return DB[coll].reduce((m,x)=>Math.max(m,x.id||0),0)+1; }
+function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function personByName(name){ return DB.people.find(p=>p.name===name) || null; }
+function eventById(id){ return DB.events.find(e=>e.id===id) || null; }
+function bandById(id){ return DB.bands.find(b=>b.id===id) || null; }
+function acadYearOf(dateStr){ if(!dateStr) return null; const p = String(dateStr).split("-"); if(p.length<2) return null; const y=+p[0], m=+p[1]; return m>=4 ? y : y-1; }
+function nowAcad(){ const d=new Date(); return d.getMonth()+1>=4 ? d.getFullYear() : d.getFullYear()-1; }
+function programYears(p){ if(p.programYears) return p.programYears; if(p.department==="医学科") return 6; if(p.department==="看護学科") return 4; return 4; }
+function gradeAt(p, acadY){
+  if(!p || !p.enrollmentYear || acadY==null) return null;
+  const raw = acadY - p.enrollmentYear + 1;
+  if(raw < 1) return "入学前";
+  const reps = (p.repeatedGrades||[]).filter(g=>g<raw).length;
+  const g = Math.max(1, raw - reps);
+  if(g > programYears(p)) return "卒業";
+  return g + "年";
+}
+function personStatus(p){
+  const na = nowAcad();
+  if(p.graduationYear){ const diff = na - p.graduationYear; if(diff>=1) return p.graduationYear + "年度卒業／卒業" + diff + "年目"; }
+  if(!p.enrollmentYear) return "入学年度未登録";
+  const g = gradeAt(p, na);
+  if(g==="卒業") return "卒業（推定）";
+  return g || "";
+}
+function bandRefDate(band){
+  let best = null;
+  (band.appearances||[]).forEach(a=>{ const ev = eventById(a.eventId); if(ev && ev.startDate && (!best || ev.startDate < best)) best = ev.startDate; });
+  if(best) return best;
+  const m = String(band.period||"").match(/(\d{4})年/);
+  if(m) return m[1] + "-04-01";
+  return null;
+}
+function memberGradeText(band, member){
+  if(member.gradeOverride) return member.gradeOverride;
+  const p = personByName(member.name);
+  if(!p) return "";
+  const rd = bandRefDate(band);
+  if(!rd) return "";
+  const g = gradeAt(p, acadYearOf(rd));
+  return g ? "当時" + g : "";
+}
+function effArtist(band, song){ return song.artist || (band.bandType==="copy" ? (band.copyArtist||"") : ""); }
+function songKey(band, song){ return song.title + "\u0001" + effArtist(band, song); }
+const STATUS_LABEL = { active:"活動中", ended:"解散・終了", planning:"構想中" };
+const FIXED_PARTS = ["ドラム","ボーカル","ギター","ベース","キーボード"];
+
+let view = { tab:"bands", bandId:null, personName:null, eventId:null, query:"", statusFilter:"all", songQuery:"", peopleQuery:"" };
+const TABS = [ ["bands","バンド"], ["people","メンバー"], ["events","ライブ"], ["songs","曲"], ["stats","統計"], ["data","データ"] ];
+function renderTabs(){
+  document.getElementById("tabs").innerHTML = TABS.map(t=>`<button class="${view.tab===t[0]?"active":""}" onclick="App.goTab('${t[0]}')">${t[1]}</button>`).join("");
+}
+function render(){
+  renderTabs();
+  const app = document.getElementById("app");
+  if(view.tab==="bands") app.innerHTML = view.bandId ? bandDetailHTML(bandById(view.bandId)) : bandListHTML();
+  else if(view.tab==="people") app.innerHTML = view.personId ? personDetailHTML(DB.people.find(p=>p.id===view.personId)) : peopleListHTML();
+  else if(view.tab==="events") app.innerHTML = view.eventId ? eventDetailHTML(eventById(view.eventId)) : eventsListHTML();
+  else if(view.tab==="songs") app.innerHTML = songsHTML();
+  else if(view.tab==="stats") app.innerHTML = statsHTML();
+  else if(view.tab==="data") app.innerHTML = dataHTML();
+  window.scrollTo(0,0);
+}
+
+/* ---------- バンド一覧・詳細 ---------- */
+function bandMatchesQuery(b, q){
+  if(!q) return true;
+  const hay = [ b.name, b.copyArtist||"", b.period||"", (b.myParts||[]).join(" "),
+    (b.members||[]).map(m=>m.name).join(" "),
+    (b.songs||[]).map(s=>s.title+" "+(s.artist||"")).join(" "),
+    (b.appearances||[]).map(a=>(a.songs||[]).map(s=>s.title+" "+(s.artist||"")).join(" ")).join(" ")
+  ].join(" ").toLowerCase();
+  return q.toLowerCase().split(/\s+/).every(w=>hay.includes(w));
+}
+function bandListHTML(){
+  const chips = [["all","すべて"],["active","活動中"],["ended","解散・終了"],["planning","構想中"]]
+    .map(c=>`<button class="btn small ${view.statusFilter===c[0]?"primary":""}" onclick="App.setStatusFilter('${c[0]}')">${c[1]}</button>`).join("");
+  let h = `<div class="row"><input type="search" class="grow" placeholder="バンド名・コピー元・メンバー・曲名で検索" value="${esc(view.query)}" oninput="App.setQuery(this.value)"><button class="btn primary" onclick="App.newBand()">＋ バンド追加</button></div>`;
+  h += `<div class="row" style="margin:8px 0 12px">${chips}</div><div id="bandResults">${bandResultsHTML()}</div>`;
+  return h;
+}
+function bandResultsHTML(){
+  const bands = DB.bands.filter(b=> (view.statusFilter==="all" || b.status===view.statusFilter) && bandMatchesQuery(b, view.query))
+    .sort((a,b)=> String(b.updatedAt||"").localeCompare(String(a.updatedAt||"")));
+  if(!bands.length) return `<div class="empty">該当するバンドがありません</div>`;
+  return `<div class="meta" style="margin-bottom:8px">${bands.length}件</div>` + bands.map(b=>{
+    const songCount = (b.songs||[]).length + (b.appearances||[]).reduce((n,a)=>n+(a.songs||[]).length,0);
+    return `<div class="card clickable" onclick="App.openBand(${b.id})"><h3>${esc(b.name)}</h3>
+      <div><span class="chip accent">${b.bandType==="copy"?"コピバン":"オムニバス"}</span>${b.copyArtist?`<span class="chip">${esc(b.copyArtist)}</span>`:""}<span class="chip">${STATUS_LABEL[b.status]||b.status}</span>${b.period?`<span class="chip">${esc(b.period)}</span>`:""}</div>
+      <div class="meta">メンバー：${(b.members||[]).map(m=>esc(m.name)).join("、") || "—"}<br>自分のパート：${(b.myParts||[]).join("、") || "—"}／曲 ${songCount}</div></div>`;
+  }).join("");
+}
+function memberBadges(m){
+  let s = "";
+  if(m.joinType==="mid") s += `<span class="badge">途中加入${m.joinNote?"（"+esc(m.joinNote)+"）":""}</span>`;
+  if(m.replacedName) s += `<span class="badge">${esc(m.replacedName)}と入れ替わり</span>`;
+  if(m.hasLeft) s += `<span class="badge">離脱${m.leftNote?"（"+esc(m.leftNote)+"）":""}</span>`;
+  return s;
+}
+function linksHTML(links){
+  if(!links || !links.length) return "";
+  return `<ul class="plain">` + links.map(l=>`<li>🎬 <a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label || l.url)}</a></li>`).join("") + `</ul>`;
+}
+function bandDetailHTML(b){
+  if(!b) return `<div class="empty">バンドが見つかりません</div>`;
+  let h = `<div class="backbar"><button class="btn" onclick="App.backToBands()">← バンド一覧</button></div>`;
+  h += `<div class="card"><h3>${esc(b.name)}</h3>
+    <div><span class="chip accent">${b.bandType==="copy"?"コピバン":"オムニバス"}</span>${b.copyArtist?`<span class="chip">${esc(b.copyArtist)}</span>`:""}<span class="chip">${STATUS_LABEL[b.status]||b.status}</span>${b.period?`<span class="chip">${esc(b.period)}</span>`:""}</div>
+    <div class="meta">自分のパート：${(b.myParts||[]).join("、") || "—"}</div>
+    ${b.memo?`<div style="margin-top:6px">${esc(b.memo)}</div>`:""}</div>`;
+  h += `<h2 class="sec">メンバー</h2><div class="card"><ul class="plain">` +
+    (b.members||[]).map(m=>{
+      const gt = memberGradeText(b, m);
+      return `<li><strong>${esc(m.name)}</strong>${memberBadges(m)}<br><span class="meta">${(m.parts||[]).join("、") || "パート未設定"}${gt?"／"+esc(gt):""}</span></li>`;
+    }).join("") + `</ul></div>`;
+  if((b.appearances||[]).length){
+    h += `<h2 class="sec">出演ライブとセットリスト</h2>`;
+    h += b.appearances.map(a=>{
+      const ev = eventById(a.eventId);
+      return `<div class="card"><h3>${ev?esc(ev.name):"（ライブ不明）"}</h3>
+        <div class="meta">${ev?esc(ev.startDate)+(ev.endDate&&ev.endDate!==ev.startDate?" 〜 "+esc(ev.endDate):""):""}</div>
+        <ul class="plain">${(a.songs||[]).map(s=>`<li>${esc(s.title)}${s.artist?`<span class="songnote">${esc(s.artist)}</span>`:""}${s.note?`<span class="songnote">${esc(s.note)}</span>`:""}</li>`).join("")}</ul>
+        ${linksHTML(a.links)}</div>`;
+    }).join("");
+  }
+  if((b.songs||[]).length){
+    h += `<h2 class="sec">曲リスト（ライブ以外）</h2><div class="card"><ul class="plain">` +
+      b.songs.map(s=>`<li>${esc(s.title)}${s.artist?`<span class="songnote">${esc(s.artist)}</span>`:""}${s.note?`<span class="songnote">${esc(s.note)}</span>`:""}</li>`).join("") + `</ul></div>`;
+  }
+  if((b.links||[]).length){ h += `<h2 class="sec">動画・写真リンク（ライブ以外）</h2><div class="card">${linksHTML(b.links)}</div>`; }
+  h += `<div class="actionbar"><button class="btn primary" onclick="App.editBand(${b.id})">編集する</button>
+    <button class="btn" onclick="App.duplicateBand(${b.id})">複製</button>
+    <button class="btn danger" onclick="App.deleteBand(${b.id})">削除</button></div>`;
+  return h;
+}
+
+/* ---------- メンバー ---------- */
+function peopleListHTML(){
+  let h = `<div class="row"><input type="search" class="grow" placeholder="名前で検索" value="${esc(view.peopleQuery)}" oninput="App.setPeopleQuery(this.value)"><button class="btn primary" onclick="App.newPerson()">＋ メンバー追加</button></div><div id="peopleResults">${peopleResultsHTML()}</div>`;
+  return h;
+}
+function peopleResultsHTML(){
+  const q = view.peopleQuery.trim().toLowerCase();
+  const list = DB.people.filter(p=>!q || p.name.toLowerCase().includes(q))
+    .sort((a,b)=> (a.enrollmentYear||9999)-(b.enrollmentYear||9999) || a.name.localeCompare(b.name,"ja"));
+  if(!list.length) return `<div class="empty">該当するメンバーがいません</div>`;
+  return list.map(p=>{
+    const bandCount = DB.bands.filter(b=>(b.members||[]).some(m=>m.name===p.name)).length;
+    return `<div class="card clickable" onclick="App.openPerson(${p.id})"><h3>${esc(p.name)}</h3>
+      <div><span class="chip accent">${esc(personStatus(p))}</span><span class="chip">${esc(p.department||"学科未登録")}</span><span class="chip">${p.enrollmentYear?p.enrollmentYear+"年入学":"入学年度未登録"}</span></div>
+      <div class="meta">参加バンド ${bandCount}件</div></div>`;
+  }).join("");
+}
+function personDetailHTML(p){
+  if(!p) return `<div class="empty">メンバーが見つかりません</div>`;
+  let h = `<div class="backbar"><button class="btn" onclick="App.backToPeople()">← メンバー一覧</button></div>`;
+  h += `<div class="card"><h3>${esc(p.name)}</h3>
+    <div><span class="chip accent">${esc(personStatus(p))}</span><span class="chip">${esc(p.gender||"")}</span><span class="chip">${esc(p.department||"学科未登録")}</span></div>
+    <div class="meta">入学年度：${p.enrollmentYear||"未登録"}${p.graduationYear?"／卒業年度："+p.graduationYear+"年度":""}${(p.repeatedGrades&&p.repeatedGrades.length)?"／留年："+p.repeatedGrades.join("・")+"年":""}</div>
+    ${p.joinedYear?`<div class="notice" style="margin-top:8px">${p.joinedYear}年度に途中入部${p.joinedGrade?"（当時"+p.joinedGrade+"年）":""}${p.joinedNote?"・"+esc(p.joinedNote):""}</div>`:""}
+  </div>`;
+  const bands = DB.bands.filter(b=>(b.members||[]).some(m=>m.name===p.name));
+  h += `<h2 class="sec">参加バンド（${bands.length}）</h2>`;
+  h += bands.length ? bands.map(b=>{
+    const m = b.members.find(x=>x.name===p.name);
+    const gt = memberGradeText(b, m);
+    return `<div class="card clickable" onclick="App.openBand(${b.id})"><h3>${esc(b.name)}</h3>
+      <div class="meta">${(m.parts||[]).join("、") || "パート未設定"}${gt?"／"+esc(gt):""}${m.joinType==="mid"?"／途中加入":""}${m.hasLeft?"／離脱済み":""}</div></div>`;
+  }).join("") : `<div class="empty">参加バンドはまだありません</div>`;
+  h += `<div class="actionbar"><button class="btn primary" onclick="App.editPerson(${p.id})">プロフィールを編集</button>
+    <button class="btn danger" onclick="App.deletePerson(${p.id})">プロフィールを削除</button></div>`;
+  return h;
+}
+
+/* ---------- ライブ ---------- */
+function eventsListHTML(){
+  let h = `<div class="row"><span class="grow meta">ライブのマスターデータ</span><button class="btn primary" onclick="App.newEvent()">＋ ライブ追加</button></div>`;
+  const list = [...DB.events].sort((a,b)=> String(a.startDate).localeCompare(String(b.startDate)));
+  if(!list.length) h += `<div class="empty">ライブがありません</div>`;
+  h += list.map(ev=>{
+    const n = DB.bands.filter(b=>(b.appearances||[]).some(a=>a.eventId===ev.id)).length;
+    return `<div class="card clickable" onclick="App.openEvent(${ev.id})"><h3>${esc(ev.name)}</h3>
+      <div class="meta">${esc(ev.startDate)}${ev.endDate&&ev.endDate!==ev.startDate?" 〜 "+esc(ev.endDate):""}／出演バンド ${n}件</div></div>`;
+  }).join("");
+  return h;
+}
+function eventDetailHTML(ev){
+  if(!ev) return `<div class="empty">ライブが見つかりません</div>`;
+  let h = `<div class="backbar"><button class="btn" onclick="App.backToEvents()">← ライブ一覧</button></div>`;
+  h += `<div class="card"><h3>${esc(ev.name)}</h3><div class="meta">${esc(ev.startDate)}${ev.endDate&&ev.endDate!==ev.startDate?" 〜 "+esc(ev.endDate):""}</div></div>`;
+  const bands = DB.bands.filter(b=>(b.appearances||[]).some(a=>a.eventId===ev.id));
+  h += `<h2 class="sec">出演バンド（${bands.length}）</h2>`;
+  h += bands.length ? bands.map(b=>{
+    const a = b.appearances.find(x=>x.eventId===ev.id);
+    return `<div class="card"><h3 class="clickable" onclick="App.openBand(${b.id})">${esc(b.name)}</h3>
+      <ul class="plain">${(a.songs||[]).map(s=>`<li>${esc(s.title)}${s.artist?`<span class="songnote">${esc(s.artist)}</span>`:""}${s.note?`<span class="songnote">${esc(s.note)}</span>`:""}</li>`).join("")}</ul>
+      ${linksHTML(a.links)}</div>`;
+  }).join("") : `<div class="empty">このライブに出演したバンドはまだ登録されていません</div>`;
+  h += `<div class="actionbar"><button class="btn primary" onclick="App.editEvent(${ev.id})">編集する</button>
+    <button class="btn danger" onclick="App.deleteEvent(${ev.id})">削除</button></div>`;
+  return h;
+}
+
+/* ---------- 曲タブ ---------- */
+function collectSongs(){
+  const map = new Map();
+  DB.bands.forEach(b=>{
+    const add = (s, evName)=>{
+      const key = songKey(b, s);
+      if(!map.has(key)) map.set(key, { title:s.title, artist:effArtist(b,s), occs:[] });
+      map.get(key).occs.push({ band:b, eventName:evName });
+    };
+    (b.appearances||[]).forEach(a=>{ const ev = eventById(a.eventId); (a.songs||[]).forEach(s=>add(s, ev?ev.name:"（ライブ不明）")); });
+    (b.songs||[]).forEach(s=>add(s, "ライブ以外"));
+  });
+  return [...map.values()];
+}
+function songsHTML(){
+  return `<div class="row"><input type="search" class="grow" placeholder="曲名・アーティスト・バンド名で検索" value="${esc(view.songQuery)}" oninput="App.setSongQuery(this.value)"></div><div id="songResults">${songResultsHTML()}</div>`;
+}
+function songResultsHTML(){
+  const q = view.songQuery.trim().toLowerCase();
+  let list = collectSongs();
+  if(q) list = list.filter(s=> (s.title+" "+s.artist+" "+s.occs.map(o=>o.band.name).join(" ")).toLowerCase().includes(q));
+  list.sort((a,b)=> b.occs.length - a.occs.length || a.title.localeCompare(b.title,"ja"));
+  if(!list.length) return `<div class="empty">該当する曲がありません</div>`;
+  return `<div class="meta" style="margin:6px 0 10px">${list.length}曲</div>` + list.map(s=>`<div class="card"><h3>${esc(s.title)}${s.occs.length>1?`<span class="badge">通算${s.occs.length}回</span>`:""}</h3>
+    ${s.artist?`<div><span class="chip">${esc(s.artist)}</span></div>`:""}
+    <div class="meta">${s.occs.map(o=>esc(o.band.name)+"（"+esc(o.eventName)+"）").join("<br>")}</div></div>`).join("");
+}
+
+/* ---------- 統計タブ ---------- */
+function statsHTML(){
+  const active = DB.bands.filter(b=>b.status==="active").length;
+  const songKinds = collectSongs().length;
+  let h = `<div class="card"><h3>概要</h3><div class="meta">バンド ${DB.bands.length}件（活動中 ${active}）／登録メンバー ${DB.people.length}人／ライブ ${DB.events.length}件／曲の種類 ${songKinds}曲</div></div>`;
+  h += `<h2 class="sec">楽器別レパートリー（自分の担当）</h2>`;
+  const parts = [...new Set(DB.bands.flatMap(b=>b.myParts||[]))]
+    .sort((a,b)=>{ const ia=FIXED_PARTS.indexOf(a), ib=FIXED_PARTS.indexOf(b); return (ia<0?99:ia)-(ib<0?99:ib) || a.localeCompare(b,"ja"); });
+  if(!parts.length) h += `<div class="empty">担当パートが登録されたバンドがありません</div>`;
+  h += parts.map(part=>{
+    const bands = DB.bands.filter(b=>(b.myParts||[]).includes(part));
+    const map = new Map();
+    bands.forEach(b=>{
+      const add = s=>{ const k = songKey(b,s); if(!map.has(k)) map.set(k,{title:s.title, artist:effArtist(b,s), count:0}); map.get(k).count++; };
+      (b.appearances||[]).forEach(a=>(a.songs||[]).forEach(add));
+      (b.songs||[]).forEach(add);
+    });
+    const songs = [...map.values()].sort((a,b)=> b.count - a.count || a.title.localeCompare(b.title,"ja"));
+    return `<div class="card"><h3>${esc(part)}<span class="badge">${songs.length}曲／${bands.length}バンド</span></h3>
+      <ul class="plain">${songs.map(s=>`<li>${esc(s.title)}${s.artist?`<span class="songnote">${esc(s.artist)}</span>`:""}${s.count>1?`<span class="badge">通算${s.count}回</span>`:""}</li>`).join("")}</ul></div>`;
+  }).join("");
+  return h;
+}
+
+/* ---------- データタブ ---------- */
+function dataHTML(){
+  return `<div class="notice">このアプリのデータは、この端末のこのブラウザ内にだけ保存されます。ブラウザのデータを消すと消えてしまうので、ときどき下のボタンで書き出し（バックアップ）を取ってください。</div>
+  <div class="card"><h3>データ管理</h3>
+    <div class="meta">バンド ${DB.bands.length}件／メンバー ${DB.people.length}人／ライブ ${DB.events.length}件</div>
+    <div class="row" style="margin-top:10px">
+      <button class="btn primary" onclick="App.exportJSON()">JSONで書き出す</button>
+      <label class="btn" style="display:inline-flex;align-items:center;cursor:pointer">JSONを読み込む<input type="file" accept=".json,application/json" style="display:none" onchange="App.importJSON(this)"></label>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn" onclick="App.exportText()">テキストで書き出す</button>
+      <button class="btn" onclick="App.exportCSV()">CSVで書き出す</button>
+    </div>
+  </div>
+  <div class="card"><h3>ホーム画面に追加する</h3>
+    <div class="meta">ホーム画面に置くと、アプリのように全画面で開けて便利です。<br>
+    iPhone：Safariでこのページを開いて、共有ボタンから「ホーム画面に追加」を選ぶ。<br>
+    Android：Chromeでこのページを開いて、右上のメニューから「ホーム画面に追加」（機種によっては「アプリをインストール」）を選ぶ。<br>
+    ファイルを直接開いている状態では追加できないことがあります。そのときは、このページをブラウザで開ける形で受け取り直してください。</div>
+  </div>
+  <div class="card"><h3>初期データに戻す</h3>
+    <div class="meta">最初の状態（バンド・メンバーは空、ライブのみ）に戻します。今の変更は失われます。</div>
+    <div class="row" style="margin-top:10px"><button class="btn danger" onclick="App.resetAll()">初期データに戻す</button></div>
+  </div>`;
+}
+function downloadFile(name, text, type){
+  const blob = new Blob([text], { type: type || "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 3000);
+}
+function dateStamp(){ const d=new Date(); const p=n=>String(n).padStart(2,"0"); return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate()); }
+
+/* ---------- バンド編集 ---------- */
+let draftBand = null, editingBandId = null;
+function formatSongs(songs){ return (songs||[]).map(s=>[s.title||"", s.artist||"", s.note||""].join("／").replace(/／+$/,"")).join("\n"); }
+function parseSongs(text){
+  return String(text||"").split(/\n/).map(l=>l.trim()).filter(Boolean).map(line=>{
+    const parts = line.split("／").map(x=>x.trim());
+    if(parts.length===1){
+      const m = parts[0].match(/^(.*?)[（(]([^（）()]*)[）)]\s*$/);
+      if(m) return { title:m[1].trim(), artist:m[2].trim(), note:"" };
+      return { title:parts[0], artist:"", note:"" };
+    }
+    return { title:parts[0], artist:parts[1]||"", note:parts.slice(2).join("／") };
+  }).filter(s=>s.title);
+}
+function prepareDraft(band){
+  const d = clone(band);
+  d.songsText = formatSongs(d.songs||[]);
+  (d.appearances||[]).forEach(a=>{ a.songsText = formatSongs(a.songs||[]); });
+  return d;
+}
+function memberRowsHTML(){
+  const names = draftBand.members.map(m=>m.name).filter(Boolean);
+  return draftBand.members.map((m,i)=>{
+    const extra = (m.parts||[]).filter(p=>!FIXED_PARTS.includes(p)).join("、");
+    const replacedOpts = [`<option value="">（なし）</option>`].concat(names.filter(n=>n!==m.name).map(n=>`<option value="${esc(n)}" ${m.replacedName===n?"selected":""}>${esc(n)}</option>`)).join("");
+    return `<div class="memberrow">
+      <div class="row"><input type="text" class="mr-name grow" list="peopleList" placeholder="名前" value="${esc(m.name)}"><button class="btn small danger" onclick="App.removeMemberRow(${i})">削除</button></div>
+      <div class="partchecks">${FIXED_PARTS.map(p=>`<label><input type="checkbox" class="mr-part" value="${p}" ${(m.parts||[]).includes(p)?"checked":""}>${p}</label>`).join("")}</div>
+      <input type="text" class="mr-extra" placeholder="その他のパート（、区切り）" value="${esc(extra)}">
+      <div class="grid2">
+        <div><label class="flabel">加入区分</label><select class="mr-join"><option value="founding" ${m.joinType!=="mid"?"selected":""}>結成メンバー</option><option value="mid" ${m.joinType==="mid"?"selected":""}>途中加入</option></select></div>
+        <div><label class="flabel">途中加入の時期メモ</label><input type="text" class="mr-joinnote" value="${esc(m.joinNote||"")}"></div>
+        <div><label class="flabel">誰との入れ替わりか</label><select class="mr-replaced">${replacedOpts}</select></div>
+        <div><label class="flabel">当時の学年（手動指定）</label><input type="text" class="mr-grade" value="${esc(m.gradeOverride||"")}"></div>
+      </div>
+      <label style="display:flex;gap:6px;align-items:center;margin-top:6px"><input type="checkbox" class="mr-left" ${m.hasLeft?"checked":""} style="width:18px;height:18px">離脱した</label>
+      <input type="text" class="mr-leftnote" placeholder="離脱の時期メモ" value="${esc(m.leftNote||"")}">
+    </div>`;
+  }).join("");
+}
+function linkRowsHTML(links, cls){
+  return (links||[]).map((l,i)=>`<div class="row"><input type="text" class="${cls}-label" placeholder="ラベル（任意）" value="${esc(l.label||"")}" style="flex:1 1 110px"><input type="text" class="${cls}-url grow" placeholder="URL" value="${esc(l.url||"")}"><button class="btn small danger" onclick="App.removeLinkRow(this,'${cls}')">削除</button></div>`).join("");
+}
+function appBlocksHTML(){
+  const evOpts = sel => [...DB.events].sort((a,b)=>String(a.startDate).localeCompare(String(b.startDate)))
+    .map(ev=>`<option value="${ev.id}" ${ev.id===sel?"selected":""}>${esc(ev.name)}</option>`).join("");
+  return draftBand.appearances.map((a,j)=>`<div class="card appblock">
+    <div class="row"><select class="ap-event grow">${evOpts(a.eventId)}</select><button class="btn small danger" onclick="App.removeAppearance(${j})">出演を削除</button></div>
+    <label class="flabel">セットリスト（1行に1曲「曲名／アーティスト／編成メモ」）</label>
+    <textarea class="ap-songs">${esc(a.songsText||"")}</textarea>
+    <label class="flabel">動画・写真リンク</label>
+    <div class="ap-links">${linkRowsHTML(a.links||[], "al"+j)}</div>
+    <button class="btn small" onclick="App.addAppLink(${j})">＋ リンク追加</button>
+  </div>`).join("");
+}
+function bandEditorHTML(){
+  const d = draftBand;
+  const allNames = [...new Set([...DB.people.map(p=>p.name), ...DB.bands.flatMap(b=>(b.members||[]).map(m=>m.name))])];
+  return `<div class="backbar"><button class="btn" onclick="App.cancelBandEdit()">← 戻る（保存しない）</button></div>
+  <div class="card">
+    <label class="flabel">バンド名（必須）</label><input type="text" id="bf-name" value="${esc(d.name)}">
+    <div class="grid2">
+      <div><label class="flabel">種別</label><select id="bf-type"><option value="copy" ${d.bandType==="copy"?"selected":""}>コピバン</option><option value="omnibus" ${d.bandType==="omnibus"?"selected":""}>オムニバス</option></select></div>
+      <div><label class="flabel">状態</label><select id="bf-status"><option value="active" ${d.status==="active"?"selected":""}>活動中</option><option value="ended" ${d.status==="ended"?"selected":""}>解散・終了</option><option value="planning" ${d.status==="planning"?"selected":""}>構想中</option></select></div>
+    </div>
+    <label class="flabel">コピー元アーティスト</label><input type="text" id="bf-artist" value="${esc(d.copyArtist||"")}">
+    <label class="flabel">活動期間</label><input type="text" id="bf-period" value="${esc(d.period||"")}">
+    <label class="flabel">自分のパート（、区切り）</label><input type="text" id="bf-myparts" value="${esc((d.myParts||[]).join("、"))}">
+    <label class="flabel">メモ</label><textarea id="bf-memo">${esc(d.memo||"")}</textarea>
+    <label class="flabel">曲リスト（ライブ以外）― 1行に1曲「曲名／アーティスト／編成メモ」</label><textarea id="bf-songs">${esc(d.songsText||"")}</textarea>
+  </div>
+  <h2 class="sec">メンバー</h2>
+  <div id="membersBox">${memberRowsHTML()}</div>
+  <div class="card"><label class="flabel">メンバー一括追加（1行に1人「名前（パート、パート）」）</label><textarea id="bf-bulk" placeholder="例：名前（ギター、ボーカル）"></textarea>
+  <div class="row"><button class="btn" onclick="App.bulkAddMembers()">一括追加</button><button class="btn" onclick="App.addMemberRow()">＋ 1人追加</button></div></div>
+  <h2 class="sec">出演ライブ</h2>
+  <div id="appsBox">${appBlocksHTML()}</div>
+  <button class="btn" onclick="App.addAppearance()">＋ 出演を追加</button>
+  <h2 class="sec">動画・写真リンク（ライブ以外）</h2>
+  <div class="card"><div id="linksBox">${linkRowsHTML(d.links||[], "bl")}</div><button class="btn small" onclick="App.addBandLink()">＋ リンク追加</button></div>
+  <div class="actionbar"><button class="btn primary" onclick="App.saveBand()">保存する</button><button class="btn" onclick="App.cancelBandEdit()">キャンセル</button></div>
+  <datalist id="peopleList">${allNames.map(n=>`<option value="${esc(n)}">`).join("")}</datalist>`;
+}
+function syncBandDraft(){
+  const d = draftBand; if(!d) return;
+  d.name = document.getElementById("bf-name").value;
+  d.bandType = document.getElementById("bf-type").value;
+  d.status = document.getElementById("bf-status").value;
+  d.copyArtist = document.getElementById("bf-artist").value;
+  d.period = document.getElementById("bf-period").value;
+  d.myParts = document.getElementById("bf-myparts").value.split(/[、,，]/).map(x=>x.trim()).filter(Boolean);
+  d.memo = document.getElementById("bf-memo").value;
+  d.songsText = document.getElementById("bf-songs").value;
+  d.members = [...document.querySelectorAll("#membersBox .memberrow")].map(row=>{
+    const parts = [...row.querySelectorAll(".mr-part")].filter(c=>c.checked).map(c=>c.value);
+    row.querySelector(".mr-extra").value.split(/[、,，]/).map(x=>x.trim()).filter(Boolean).forEach(p=>{ if(!parts.includes(p)) parts.push(p); });
+    return { name: row.querySelector(".mr-name").value.trim(), parts,
+      gradeOverride: row.querySelector(".mr-grade").value.trim(),
+      joinType: row.querySelector(".mr-join").value, joinNote: row.querySelector(".mr-joinnote").value.trim(),
+      hasLeft: row.querySelector(".mr-left").checked, leftNote: row.querySelector(".mr-leftnote").value.trim(),
+      replacedName: row.querySelector(".mr-replaced").value };
+  });
+  d.appearances = [...document.querySelectorAll("#appsBox .appblock")].map((blk,j)=>{
+    return { eventId: +blk.querySelector(".ap-event").value || null, songsText: blk.querySelector(".ap-songs").value,
+      links: [...blk.querySelectorAll(".ap-links > .row")].map(r=>({ label: r.querySelector(".al"+j+"-label").value.trim(), url: r.querySelector(".al"+j+"-url").value.trim() })) };
+  });
+  d.links = [...document.querySelectorAll("#linksBox > .row")].map(r=>({ label: r.querySelector(".bl-label").value.trim(), url: r.querySelector(".bl-url").value.trim() }));
+}
+
+/* ---------- メンバー編集 ---------- */
+let draftPerson = null, editingPersonId = null;
+function personEditorHTML(){
+  const d = draftPerson;
+  return `<div class="backbar"><button class="btn" onclick="App.cancelPersonEdit()">← 戻る（保存しない）</button></div>
+  <div class="card">
+    <label class="flabel">名前（必須）</label><input type="text" id="pf-name" value="${esc(d.name||"")}">
+    <div class="grid2">
+      <div><label class="flabel">性別</label><select id="pf-gender"><option value="" ${!d.gender?"selected":""}>未設定</option><option value="男性" ${d.gender==="男性"?"selected":""}>男性</option><option value="女性" ${d.gender==="女性"?"selected":""}>女性</option></select></div>
+      <div><label class="flabel">学科</label><select id="pf-dept"><option value="医学科" ${d.department==="医学科"?"selected":""}>医学科</option><option value="看護学科" ${d.department==="看護学科"?"selected":""}>看護学科</option><option value="その他" ${d.department==="その他"?"selected":""}>その他</option></select></div>
+      <div><label class="flabel">修業年限（学科が「その他」のとき）</label><input type="number" id="pf-prog" value="${d.programYears||""}" min="1" max="12"></div>
+      <div><label class="flabel">入学年度</label><input type="number" id="pf-enroll" value="${d.enrollmentYear||""}" min="1950" max="2100"></div>
+      <div><label class="flabel">卒業年度（卒業済みのとき。例：2025年度卒業→2025）</label><input type="number" id="pf-grad" value="${d.graduationYear||""}" min="1950" max="2100"></div>
+      <div><label class="flabel">留年した学年（カンマ区切り。同じ学年を2回なら「1,1」）</label><input type="text" id="pf-rep" value="${(d.repeatedGrades||[]).join(",")}"></div>
+    </div>
+    <details><summary>詳細オプション（途中入部）</summary>
+      <div class="grid2">
+        <div><label class="flabel">途中入部の年度</label><input type="number" id="pf-joinyear" value="${d.joinedYear||""}" min="1950" max="2100"></div>
+        <div><label class="flabel">加入時の学年</label><input type="number" id="pf-joingrade" value="${d.joinedGrade||""}" min="1" max="12"></div>
+      </div>
+      <label class="flabel">時期メモ</label><input type="text" id="pf-joinnote" value="${esc(d.joinedNote||"")}">
+    </details>
+  </div>
+  <div class="actionbar"><button class="btn primary" onclick="App.savePerson()">保存する</button><button class="btn" onclick="App.cancelPersonEdit()">キャンセル</button></div>`;
+}
+
+/* ---------- ライブ編集 ---------- */
+let draftEvent = null, editingEventId = null;
+function eventEditorHTML(){
+  const d = draftEvent;
+  return `<div class="backbar"><button class="btn" onclick="App.cancelEventEdit()">← 戻る（保存しない）</button></div>
+  <div class="card">
+    <label class="flabel">ライブ名（必須）</label><input type="text" id="ef-name" value="${esc(d.name||"")}">
+    <div class="grid2">
+      <div><label class="flabel">開始日</label><input type="date" id="ef-start" value="${esc(d.startDate||"")}"></div>
+      <div><label class="flabel">終了日</label><input type="date" id="ef-end" value="${esc(d.endDate||"")}"></div>
+    </div>
+  </div>
+  <div class="actionbar"><button class="btn primary" onclick="App.saveEvent()">保存する</button><button class="btn" onclick="App.cancelEventEdit()">キャンセル</button></div>`;
+}
+
+/* ---------- 操作 ---------- */
+function showEditor(html){ document.getElementById("app").innerHTML = html; window.scrollTo(0,0); }
+const App = {
+  goTab(tab){ view.tab = tab; view.bandId = null; view.personId = null; view.eventId = null; render(); },
+  setQuery(v){ view.query = v; const el = document.getElementById("bandResults"); if(el) el.innerHTML = bandResultsHTML(); },
+  setStatusFilter(f){ view.statusFilter = f; render(); },
+  openBand(id){ view.tab = "bands"; view.bandId = id; render(); },
+  backToBands(){ view.bandId = null; render(); },
+  newBand(){ editingBandId = null; draftBand = prepareDraft({ name:"", bandType:"copy", copyArtist:"", status:"active", period:"", myParts:[], memo:"", links:[], songs:[], members:[], appearances:[] }); showEditor(bandEditorHTML()); },
+  editBand(id){ const b = bandById(id); if(!b) return; editingBandId = id; draftBand = prepareDraft(b); showEditor(bandEditorHTML()); },
+  duplicateBand(id){ const b = bandById(id); if(!b) return; const c = clone(b); delete c.songsText; (c.appearances||[]).forEach(a=>delete a.songsText); c.id = nextId("bands"); c.name = b.name + "（コピー）"; c.updatedAt = new Date().toISOString(); DB.bands.push(c); saveDB(); App.openBand(c.id); },
+  deleteBand(id){ const b = bandById(id); if(!b) return; if(!confirm("バンド「" + b.name + "」を削除しますか？")) return; DB.bands = DB.bands.filter(x=>x.id!==id); saveDB(); view.bandId = null; render(); },
+  cancelBandEdit(){ draftBand = null; render(); },
+  addMemberRow(){ syncBandDraft(); draftBand.members.push({ name:"", parts:[], gradeOverride:"", joinType:"founding", joinNote:"", hasLeft:false, leftNote:"", replacedName:"" }); document.getElementById("membersBox").innerHTML = memberRowsHTML(); },
+  removeMemberRow(i){ syncBandDraft(); draftBand.members.splice(i,1); document.getElementById("membersBox").innerHTML = memberRowsHTML(); },
+  bulkAddMembers(){ syncBandDraft(); const text = document.getElementById("bf-bulk").value;
+    text.split(/\n/).map(l=>l.trim()).filter(Boolean).forEach(line=>{
+      const m = line.match(/^(.*?)[（(]([^（）()]*)[）)]\s*$/);
+      const name = (m ? m[1] : line).trim(); if(!name) return;
+      const parts = m ? m[2].split(/[、,，・]/).map(x=>x.trim()).filter(Boolean) : [];
+      draftBand.members.push({ name, parts, gradeOverride:"", joinType:"founding", joinNote:"", hasLeft:false, leftNote:"", replacedName:"" });
+    });
+    document.getElementById("bf-bulk").value = ""; document.getElementById("membersBox").innerHTML = memberRowsHTML(); },
+  addAppearance(){ syncBandDraft(); draftBand.appearances.push({ eventId: DB.events.length ? DB.events[DB.events.length-1].id : null, songsText:"", links:[] }); document.getElementById("appsBox").innerHTML = appBlocksHTML(); },
+  removeAppearance(j){ syncBandDraft(); draftBand.appearances.splice(j,1); document.getElementById("appsBox").innerHTML = appBlocksHTML(); },
+  addAppLink(j){ syncBandDraft(); (draftBand.appearances[j].links = draftBand.appearances[j].links || []).push({ label:"", url:"" }); document.getElementById("appsBox").innerHTML = appBlocksHTML(); },
+  addBandLink(){ syncBandDraft(); draftBand.links.push({ label:"", url:"" }); document.getElementById("linksBox").innerHTML = linkRowsHTML(draftBand.links, "bl"); },
+  removeLinkRow(btn, cls){ btn.closest(".row").remove(); },
+  saveBand(){
+    syncBandDraft();
+    const d = draftBand;
+    if(!d.name.trim()){ alert("バンド名を入力してください"); return; }
+    const band = { name: d.name.trim(), bandType: d.bandType, copyArtist: d.copyArtist.trim(), status: d.status, period: d.period.trim(),
+      myParts: d.myParts, memo: d.memo, songs: parseSongs(d.songsText),
+      members: d.members.filter(m=>m.name),
+      appearances: d.appearances.filter(a=>a.eventId).map(a=>({ eventId: a.eventId, songs: parseSongs(a.songsText), links: (a.links||[]).filter(l=>l.url) })),
+      links: (d.links||[]).filter(l=>l.url), updatedAt: new Date().toISOString() };
+    if(editingBandId){ band.id = editingBandId; const i = DB.bands.findIndex(x=>x.id===editingBandId); if(i>=0) DB.bands[i] = band; }
+    else { band.id = nextId("bands"); DB.bands.push(band); }
+    saveDB(); draftBand = null; view.tab = "bands"; view.bandId = band.id; render();
+  },
+  setPeopleQuery(v){ view.peopleQuery = v; const el = document.getElementById("peopleResults"); if(el) el.innerHTML = peopleResultsHTML(); },
+  openPerson(id){ view.tab = "people"; view.personId = id; render(); },
+  backToPeople(){ view.personId = null; render(); },
+  newPerson(){ editingPersonId = null; draftPerson = { name:"", gender:"", department:"医学科", programYears:null, enrollmentYear:null, graduationYear:null, repeatedGrades:[], joinedYear:null, joinedGrade:null, joinedNote:"" }; showEditor(personEditorHTML()); },
+  editPerson(id){ const p = DB.people.find(x=>x.id===id); if(!p) return; editingPersonId = id; draftPerson = clone(p); showEditor(personEditorHTML()); },
+  deletePerson(id){ const p = DB.people.find(x=>x.id===id); if(!p) return; if(!confirm("「" + p.name + "」のプロフィールを削除しますか？（バンド側のメンバー記録は残ります）")) return; DB.people = DB.people.filter(x=>x.id!==id); saveDB(); view.personId = null; render(); },
+  cancelPersonEdit(){ draftPerson = null; render(); },
+  savePerson(){
+    const name = document.getElementById("pf-name").value.trim();
+    if(!name){ alert("名前を入力してください"); return; }
+    if(DB.people.some(p=>p.name===name && p.id!==editingPersonId)){ alert("同じ名前のメンバーが既に登録されています"); return; }
+    const num = id => { const v = document.getElementById(id).value; return v==="" ? null : +v; };
+    const dept = document.getElementById("pf-dept").value;
+    const person = { name, gender: document.getElementById("pf-gender").value, department: dept,
+      programYears: dept==="その他" ? num("pf-prog") : null,
+      enrollmentYear: num("pf-enroll"), graduationYear: num("pf-grad"),
+      repeatedGrades: document.getElementById("pf-rep").value.split(/[、,，\s]+/).filter(Boolean).map(x=>parseInt(x,10)).filter(n=>n>=1 && n<=12),
+      joinedYear: num("pf-joinyear"), joinedGrade: num("pf-joingrade"), joinedNote: document.getElementById("pf-joinnote").value.trim() };
+    if(editingPersonId){
+      const old = DB.people.find(p=>p.id===editingPersonId);
+      if(old && old.name !== name){ DB.bands.forEach(b=>{ (b.members||[]).forEach(m=>{ if(m.name===old.name) m.name = name; if(m.replacedName===old.name) m.replacedName = name; }); }); }
+      person.id = editingPersonId; const i = DB.people.findIndex(p=>p.id===editingPersonId); if(i>=0) DB.people[i] = person;
+    } else { person.id = nextId("people"); DB.people.push(person); }
+    saveDB(); draftPerson = null; view.tab = "people"; view.personId = person.id; render();
+  },
+  openEvent(id){ view.tab = "events"; view.eventId = id; render(); },
+  backToEvents(){ view.eventId = null; render(); },
+  newEvent(){ editingEventId = null; draftEvent = { name:"", startDate:"", endDate:"" }; showEditor(eventEditorHTML()); },
+  editEvent(id){ const ev = eventById(id); if(!ev) return; editingEventId = id; draftEvent = clone(ev); showEditor(eventEditorHTML()); },
+  deleteEvent(id){ const ev = eventById(id); if(!ev) return; if(!confirm("ライブ「" + ev.name + "」を削除しますか？（バンド側の出演記録も外れます）")) return;
+    DB.events = DB.events.filter(x=>x.id!==id); DB.bands.forEach(b=>{ b.appearances = (b.appearances||[]).filter(a=>a.eventId!==id); }); saveDB(); view.eventId = null; render(); },
+  cancelEventEdit(){ draftEvent = null; render(); },
+  saveEvent(){
+    const name = document.getElementById("ef-name").value.trim();
+    if(!name){ alert("ライブ名を入力してください"); return; }
+    const start = document.getElementById("ef-start").value, end = document.getElementById("ef-end").value || start;
+    const ev = { name, startDate: start, endDate: end };
+    if(editingEventId){ ev.id = editingEventId; const i = DB.events.findIndex(x=>x.id===editingEventId); if(i>=0) DB.events[i] = ev; }
+    else { ev.id = nextId("events"); DB.events.push(ev); }
+    saveDB(); draftEvent = null; view.tab = "events"; view.eventId = ev.id; render();
+  },
+  setSongQuery(v){ view.songQuery = v; const el = document.getElementById("songResults"); if(el) el.innerHTML = songResultsHTML(); },
+  exportJSON(){ downloadFile("band-archive-" + dateStamp() + ".json", JSON.stringify(DB, null, 2), "application/json"); },
+  importJSON(input){
+    const file = input.files && input.files[0]; if(!file) return;
+    const reader = new FileReader();
+    reader.onload = () => { try{
+        const d = JSON.parse(reader.result);
+        if(!d || !Array.isArray(d.people) || !Array.isArray(d.events) || !Array.isArray(d.bands)) throw new Error("bad format");
+        DB = d; saveDB(); view = { tab:"bands", bandId:null, personId:null, eventId:null, query:"", statusFilter:"all", songQuery:"", peopleQuery:"" }; render(); alert("読み込みました");
+      }catch(e){ alert("読み込めませんでした（ファイル形式が違います）"); } };
+    reader.readAsText(file); input.value = "";
+  },
+  exportText(){
+    const lines = [];
+    [...DB.bands].sort((a,b)=>String(b.updatedAt||"").localeCompare(String(a.updatedAt||""))).forEach(b=>{
+      lines.push("■ " + b.name + "（" + (b.bandType==="copy"?"コピバン":"オムニバス") + (b.copyArtist?"／"+b.copyArtist:"") + "）");
+      lines.push("状態：" + (STATUS_LABEL[b.status]||b.status) + "　期間：" + (b.period||"") + "　自分のパート：" + (b.myParts||[]).join("、"));
+      lines.push("メンバー：" + (b.members||[]).map(m=>m.name + (m.parts&&m.parts.length?"（"+m.parts.join("、")+"）":"")).join("、"));
+      (b.appearances||[]).forEach(a=>{ const ev = eventById(a.eventId); lines.push("出演：" + (ev?ev.name:"") + "（" + (ev?ev.startDate:"") + "）");
+        (a.songs||[]).forEach(s=>lines.push("　・" + s.title + (s.artist?"／"+s.artist:"") + (s.note?"（"+s.note+"）":"")));
+        (a.links||[]).forEach(l=>lines.push("　リンク：" + l.url)); });
+      (b.songs||[]).forEach(s=>lines.push("曲：" + s.title + (s.artist?"／"+s.artist:"")));
+      if(b.memo) lines.push("メモ：" + b.memo);
+      lines.push("");
+    });
+    downloadFile("band-archive-" + dateStamp() + ".txt", lines.join("\n"));
+  },
+  exportCSV(){
+    const q = v => '"' + String(v==null?"":v).replace(/"/g,'""') + '"';
+    const rows = [["バンド名","種別","コピー元","状態","活動期間","自分のパート","メンバー","曲数"].join(",")];
+    DB.bands.forEach(b=>{
+      const n = (b.songs||[]).length + (b.appearances||[]).reduce((s,a)=>s+(a.songs||[]).length,0);
+      rows.push([b.name, b.bandType==="copy"?"コピバン":"オムニバス", b.copyArtist||"", STATUS_LABEL[b.status]||b.status, b.period||"", (b.myParts||[]).join("、"), (b.members||[]).map(m=>m.name).join("、"), n].map(q).join(","));
+    });
+    downloadFile("band-archive-" + dateStamp() + ".csv", "\ufeff" + rows.join("\n"), "text/csv;charset=utf-8");
+  },
+  resetAll(){ if(!confirm("初期データに戻しますか？今の変更は失われます。")) return; if(!confirm("本当に戻しますか？")) return;
+    DB = { people: clone(SEED_PEOPLE), events: clone(SEED_EVENTS), bands: clone(SEED_BANDS) }; saveDB(); view.tab = "bands"; view.bandId = null; render(); alert("初期データに戻しました"); }
+};
+window.App = App;
+render();
+</script>
+</body>
+</html>
