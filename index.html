@@ -400,6 +400,12 @@ function dataHTML(){
       <button class="btn" onclick="App.exportCSV()">CSVで書き出す</button>
     </div>
   </div>
+  <div class="card"><h3>知り合いに共有する</h3>
+    <div class="meta">相手を選ぶと、その人が入っているバンドだけを抜き出したJSONを書き出します。目線は相手に合わせて変換されます（相手のパートが「自分のパート」になり、あなたはメンバーとして入ります）。受け取った人は「JSONを読み込む」から取り込めば、既存のデータに合体されます。</div>
+    <div style="margin-top:10px"><label class="flabel">自分の名前（共有先でメンバーとして表示されます）</label><input type="text" id="share-self" value="${esc(ownerName())}" onchange="App.setOwnerName(this.value)"></div>
+    <div style="margin-top:8px"><label class="flabel">共有相手</label><select id="share-partner">${[...DB.people].sort((a,b)=>a.name.localeCompare(b.name,"ja")).map(p=>`<option value="${esc(p.name)}">${esc(p.name)}</option>`).join("")}</select></div>
+    <div class="row" style="margin-top:10px"><button class="btn primary" onclick="App.exportShareJSON()">共有用JSONを書き出す</button></div>
+  </div>
   <div class="card"><h3>ホーム画面に追加する</h3>
     <div class="meta">ホーム画面に置くと、アプリのように全画面で開けて便利です。<br>
     iPhone：Safariでこのページを開いて、共有ボタンから「ホーム画面に追加」を選ぶ。<br>
@@ -418,6 +424,44 @@ function downloadFile(name, text, type){
   setTimeout(()=>URL.revokeObjectURL(url), 3000);
 }
 function dateStamp(){ const d=new Date(); const p=n=>String(n).padStart(2,"0"); return d.getFullYear()+p(d.getMonth()+1)+p(d.getDate()); }
+const SETTINGS_KEY = LS_KEY + ":settings";
+function loadSettings(){ try{ return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; }catch(e){ return {}; } }
+function ownerName(){ return loadSettings().ownerName || ""; }
+function buildShareData(partnerName, selfName){
+  const partner = DB.people.find(p=>p.name===partnerName); if(!partner) return null;
+  const bands = []; const eventIds = new Set(); const peopleNames = new Set([partnerName]);
+  DB.bands.forEach(b=>{
+    const pm = (b.members||[]).find(m=>m.name===partnerName); if(!pm) return;
+    const nb = clone(b);
+    nb.myParts = [...(pm.parts||[])];
+    nb.members = (b.members||[]).filter(m=>m.name!==partnerName).map(m=>clone(m));
+    if((b.myParts||[]).length) nb.members.push({ name:selfName, parts:[...(b.myParts||[])], gradeOverride:"", joinType:"founding", joinNote:"", hasLeft:false, leftNote:"", replacedName:"" });
+    nb.members.forEach(m=>peopleNames.add(m.name));
+    (nb.appearances||[]).forEach(a=>eventIds.add(a.eventId));
+    bands.push(nb);
+  });
+  const people = DB.people.filter(p=>peopleNames.has(p.name)).map(p=>clone(p));
+  if(!people.some(p=>p.name===selfName)) people.push({ id:0, name:selfName, gender:"", department:"", programYears:null, enrollmentYear:null, entryGrade:1, graduationYear:null, repeatedGrades:[], joinedYear:null, joinedGrade:null, joinedNote:"" });
+  const events = DB.events.filter(e=>eventIds.has(e.id)).map(e=>clone(e));
+  return { partial:true, sharedFrom:selfName, sharedTo:partnerName, people, events, bands };
+}
+function mergeSharedData(d){
+  let addedPeople = 0, addedEvents = 0, addedBands = 0, updatedBands = 0;
+  (d.people||[]).forEach(p=>{ if(!DB.people.some(x=>x.name===p.name)){ const np = clone(p); np.id = nextId("people"); DB.people.push(np); addedPeople++; } });
+  const evMap = {};
+  (d.events||[]).forEach(ev=>{
+    const ex = DB.events.find(x=>x.name===ev.name && x.startDate===ev.startDate);
+    if(ex){ evMap[ev.id] = ex.id; } else { const ne = clone(ev); ne.id = nextId("events"); DB.events.push(ne); evMap[ev.id] = ne.id; addedEvents++; }
+  });
+  (d.bands||[]).forEach(b=>{
+    const nb = clone(b);
+    (nb.appearances||[]).forEach(a=>{ if(evMap[a.eventId] != null) a.eventId = evMap[a.eventId]; });
+    const ex = DB.bands.find(x=>x.name===nb.name);
+    if(ex){ nb.id = ex.id; DB.bands[DB.bands.findIndex(x=>x.id===ex.id)] = nb; updatedBands++; }
+    else { nb.id = nextId("bands"); DB.bands.push(nb); addedBands++; }
+  });
+  return { addedPeople, addedEvents, addedBands, updatedBands };
+}
 
 /* ---------- バンド編集 ---------- */
 let draftBand = null, editingBandId = null;
@@ -654,12 +698,24 @@ const App = {
   },
   setSongQuery(v){ view.songQuery = v; const el = document.getElementById("songResults"); if(el) el.innerHTML = songResultsHTML(); },
   exportJSON(){ downloadFile("band-archive-" + dateStamp() + ".json", JSON.stringify(DB, null, 2), "application/json"); },
+  setOwnerName(v){ const s = loadSettings(); s.ownerName = String(v||"").trim(); try{ localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); }catch(e){} },
+  exportShareJSON(){
+    const selfName = (document.getElementById("share-self").value || "").trim();
+    const partnerName = document.getElementById("share-partner").value;
+    if(!selfName){ alert("自分の名前を入力してください"); return; }
+    if(!partnerName){ alert("共有相手を選んでください"); return; }
+    this.setOwnerName(selfName);
+    const d = buildShareData(partnerName, selfName);
+    if(!d || !d.bands.length){ alert("その人が入っているバンドがありません"); return; }
+    downloadFile("band-archive-share-" + partnerName + "-" + dateStamp() + ".json", JSON.stringify(d, null, 2), "application/json");
+  },
   importJSON(input){
     const file = input.files && input.files[0]; if(!file) return;
     const reader = new FileReader();
     reader.onload = () => { try{
         const d = JSON.parse(reader.result);
         if(!d || !Array.isArray(d.people) || !Array.isArray(d.events) || !Array.isArray(d.bands)) throw new Error("bad format");
+        if(d.partial){ const r = mergeSharedData(d); saveDB(); view.tab = "bands"; view.bandId = null; render(); alert("共有データを取り込みました（バンド" + (r.addedBands + r.updatedBands) + "件／メンバー" + r.addedPeople + "人追加／ライブ" + r.addedEvents + "件追加）"); return; }
         DB = d; saveDB(); view = { tab:"bands", bandId:null, personId:null, eventId:null, query:"", statusFilter:"all", songQuery:"", peopleQuery:"" }; render(); alert("読み込みました");
       }catch(e){ alert("読み込めませんでした（ファイル形式が違います）"); } };
     reader.readAsText(file); input.value = "";
