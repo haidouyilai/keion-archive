@@ -129,8 +129,8 @@ function nowAcad(){ const d=new Date(); return d.getMonth()+1>=4 ? d.getFullYear
 function programYears(p){ if(p.programYears) return p.programYears; if(p.department==="医学科") return 6; if(p.department==="看護学科") return 4; return 4; }
 function gradeAt(p, acadY){
   if(!p || !p.enrollmentYear || acadY==null) return null;
-  const raw = acadY - p.enrollmentYear + 1;
-  if(raw < 1) return "入学前";
+  if(acadY < p.enrollmentYear) return "入学前";
+  const raw = acadY - p.enrollmentYear + (p.entryGrade || 1);
   const reps = (p.repeatedGrades||[]).filter(g=>g<raw).length;
   const g = Math.max(1, raw - reps);
   if(g > programYears(p)) return "卒業";
@@ -141,8 +141,20 @@ function personStatus(p){
   if(p.graduationYear){ const diff = na - p.graduationYear; if(diff>=1) return p.graduationYear + "年度卒業／卒業" + diff + "年目"; }
   if(!p.enrollmentYear) return "入学年度未登録";
   const g = gradeAt(p, na);
-  if(g==="卒業") return "卒業（推定）";
+  if(g==="卒業"){
+    const estGrad = p.enrollmentYear + programYears(p) - (p.entryGrade || 1) + (p.repeatedGrades||[]).length;
+    return "卒業" + Math.max(1, na - estGrad) + "年目";
+  }
   return g || "";
+}
+const COHORT_BASE_YEAR = 1974; /* 2024年度入学 = 50期 */
+function cohortText(p){
+  if(!p || !p.enrollmentYear) return "";
+  const base = p.enrollmentYear - ((p.entryGrade || 1) - 1) - COHORT_BASE_YEAR;
+  const n = (p.repeatedGrades || []).length;
+  const out = [];
+  for(let i = 0; i <= n; i++) out.push((base + i) + "期");
+  return out.join("・");
 }
 function bandRefDate(band){
   let best = null;
@@ -268,7 +280,7 @@ function peopleResultsHTML(){
   return list.map(p=>{
     const bandCount = DB.bands.filter(b=>(b.members||[]).some(m=>m.name===p.name)).length;
     return `<div class="card clickable" onclick="App.openPerson(${p.id})"><h3>${esc(p.name)}</h3>
-      <div><span class="chip accent">${esc(personStatus(p))}</span><span class="chip">${esc(p.department||"学科未登録")}</span><span class="chip">${p.enrollmentYear?p.enrollmentYear+"年入学":"入学年度未登録"}</span></div>
+      <div><span class="chip accent">${esc(personStatus(p))}</span><span class="chip">${esc(p.department||"学科未登録")}</span><span class="chip">${p.enrollmentYear?p.enrollmentYear+"年入学":"入学年度未登録"}</span>${cohortText(p)?`<span class="chip">${esc(cohortText(p))}</span>`:""}</div>
       <div class="meta">参加バンド ${bandCount}件</div></div>`;
   }).join("");
 }
@@ -277,7 +289,7 @@ function personDetailHTML(p){
   let h = `<div class="backbar"><button class="btn" onclick="App.backToPeople()">← メンバー一覧</button></div>`;
   h += `<div class="card"><h3>${esc(p.name)}</h3>
     <div><span class="chip accent">${esc(personStatus(p))}</span><span class="chip">${esc(p.gender||"")}</span><span class="chip">${esc(p.department||"学科未登録")}</span></div>
-    <div class="meta">入学年度：${p.enrollmentYear||"未登録"}${p.graduationYear?"／卒業年度："+p.graduationYear+"年度":""}${(p.repeatedGrades&&p.repeatedGrades.length)?"／留年："+p.repeatedGrades.join("・")+"年":""}</div>
+    <div class="meta">入学年度：${p.enrollmentYear||"未登録"}${p.entryGrade&&p.entryGrade>1?"（"+p.entryGrade+"年次編入）":""}${cohortText(p)?"／"+esc(cohortText(p)):""}${p.graduationYear?"／卒業年度："+p.graduationYear+"年度":""}${(p.repeatedGrades&&p.repeatedGrades.length)?"／留年："+p.repeatedGrades.join("・")+"年":""}</div>
     ${p.joinedYear?`<div class="notice" style="margin-top:8px">${p.joinedYear}年度に途中入部${p.joinedGrade?"（当時"+p.joinedGrade+"年）":""}${p.joinedNote?"・"+esc(p.joinedNote):""}</div>`:""}
   </div>`;
   const bands = DB.bands.filter(b=>(b.members||[]).some(m=>m.name===p.name));
@@ -528,6 +540,7 @@ function personEditorHTML(){
       <div><label class="flabel">学科</label><select id="pf-dept"><option value="医学科" ${d.department==="医学科"?"selected":""}>医学科</option><option value="看護学科" ${d.department==="看護学科"?"selected":""}>看護学科</option><option value="その他" ${d.department==="その他"?"selected":""}>その他</option></select></div>
       <div><label class="flabel">修業年限（学科が「その他」のとき）</label><input type="number" id="pf-prog" value="${d.programYears||""}" min="1" max="12"></div>
       <div><label class="flabel">入学年度</label><input type="number" id="pf-enroll" value="${d.enrollmentYear||""}" min="1950" max="2100"></div>
+      <div><label class="flabel">入学時の学年（通常は1。学士編入で2年次入学なら2）</label><input type="number" id="pf-entry" value="${d.entryGrade||1}" min="1" max="6"></div>
       <div><label class="flabel">卒業年度（卒業済みのとき。例：2025年度卒業→2025）</label><input type="number" id="pf-grad" value="${d.graduationYear||""}" min="1950" max="2100"></div>
       <div><label class="flabel">留年した学年（カンマ区切り。同じ学年を2回なら「1,1」）</label><input type="text" id="pf-rep" value="${(d.repeatedGrades||[]).join(",")}"></div>
     </div>
@@ -601,7 +614,7 @@ const App = {
   setPeopleQuery(v){ view.peopleQuery = v; const el = document.getElementById("peopleResults"); if(el) el.innerHTML = peopleResultsHTML(); },
   openPerson(id){ view.tab = "people"; view.personId = id; render(); },
   backToPeople(){ view.personId = null; render(); },
-  newPerson(){ editingPersonId = null; draftPerson = { name:"", gender:"", department:"医学科", programYears:null, enrollmentYear:null, graduationYear:null, repeatedGrades:[], joinedYear:null, joinedGrade:null, joinedNote:"" }; showEditor(personEditorHTML()); },
+  newPerson(){ editingPersonId = null; draftPerson = { name:"", gender:"", department:"医学科", programYears:null, enrollmentYear:null, entryGrade:1, graduationYear:null, repeatedGrades:[], joinedYear:null, joinedGrade:null, joinedNote:"" }; showEditor(personEditorHTML()); },
   editPerson(id){ const p = DB.people.find(x=>x.id===id); if(!p) return; editingPersonId = id; draftPerson = clone(p); showEditor(personEditorHTML()); },
   deletePerson(id){ const p = DB.people.find(x=>x.id===id); if(!p) return; if(!confirm("「" + p.name + "」のプロフィールを削除しますか？（バンド側のメンバー記録は残ります）")) return; DB.people = DB.people.filter(x=>x.id!==id); saveDB(); view.personId = null; render(); },
   cancelPersonEdit(){ draftPerson = null; render(); },
@@ -613,7 +626,7 @@ const App = {
     const dept = document.getElementById("pf-dept").value;
     const person = { name, gender: document.getElementById("pf-gender").value, department: dept,
       programYears: dept==="その他" ? num("pf-prog") : null,
-      enrollmentYear: num("pf-enroll"), graduationYear: num("pf-grad"),
+      enrollmentYear: num("pf-enroll"), entryGrade: num("pf-entry") || 1, graduationYear: num("pf-grad"),
       repeatedGrades: document.getElementById("pf-rep").value.split(/[、,，\s]+/).filter(Boolean).map(x=>parseInt(x,10)).filter(n=>n>=1 && n<=12),
       joinedYear: num("pf-joinyear"), joinedGrade: num("pf-joingrade"), joinedNote: document.getElementById("pf-joinnote").value.trim() };
     if(editingPersonId){
