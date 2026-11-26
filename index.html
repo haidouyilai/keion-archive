@@ -178,7 +178,7 @@ function songKey(band, song){ return song.title + "\u0001" + effArtist(band, son
 const STATUS_LABEL = { active:"活動中", ended:"解散・終了", planning:"構想中" };
 const FIXED_PARTS = ["ドラム","ボーカル","ギター","ベース","キーボード"];
 
-let view = { tab:"bands", bandId:null, personName:null, eventId:null, query:"", statusFilter:"all", songQuery:"", peopleQuery:"" };
+let view = { tab:"bands", bandId:null, personName:null, eventId:null, query:"", statusFilter:"all", songQuery:"", peopleQuery:"", bandSort:"updated", peopleSort:"grade", songSort:"count" };
 const TABS = [ ["bands","バンド"], ["people","メンバー"], ["events","ライブ"], ["songs","曲"], ["stats","統計"], ["data","データ"] ];
 function renderTabs(){
   document.getElementById("tabs").innerHTML = TABS.map(t=>`<button class="${view.tab===t[0]?"active":""}" onclick="App.goTab('${t[0]}')">${t[1]}</button>`).join("");
@@ -209,12 +209,20 @@ function bandListHTML(){
   const chips = [["all","すべて"],["active","活動中"],["ended","解散・終了"],["planning","構想中"]]
     .map(c=>`<button class="btn small ${view.statusFilter===c[0]?"primary":""}" onclick="App.setStatusFilter('${c[0]}')">${c[1]}</button>`).join("");
   let h = `<div class="row"><input type="search" class="grow" placeholder="バンド名・コピー元・メンバー・曲名で検索" value="${esc(view.query)}" oninput="App.setQuery(this.value)"><button class="btn primary" onclick="App.newBand()">＋ バンド追加</button></div>`;
-  h += `<div class="row" style="margin:8px 0 12px">${chips}</div><div id="bandResults">${bandResultsHTML()}</div>`;
+  h += `<div class="row" style="margin:8px 0">${chips}</div>`;
+  h += `<div class="row" style="margin:0 0 12px"><span class="meta">並び替え：</span><select style="width:auto;margin:0" onchange="App.setBandSort(this.value)">${[["updated","最近更新した順"],["name","名前順"],["nextLive","次のライブが近い順"],["members","メンバー数順"],["songs","曲数順"]].map(o=>`<option value="${o[0]}" ${view.bandSort===o[0]?"selected":""}>${o[1]}</option>`).join("")}</select></div><div id="bandResults">${bandResultsHTML()}</div>`;
   return h;
 }
 function bandResultsHTML(){
-  const bands = DB.bands.filter(b=> (view.statusFilter==="all" || b.status===view.statusFilter) && bandMatchesQuery(b, view.query))
-    .sort((a,b)=> String(b.updatedAt||"").localeCompare(String(a.updatedAt||"")));
+  const bands = DB.bands.filter(b=> (view.statusFilter==="all" || b.status===view.statusFilter) && bandMatchesQuery(b, view.query));
+  const songCountOf = b => (b.songs||[]).length + (b.appearances||[]).reduce((n,a)=>n+(a.songs||[]).length,0);
+  const nextLiveKey = b => { const t = new Date(); const today = t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0"); const ds = (b.appearances||[]).map(a=>{ const ev = eventById(a.eventId); return ev ? ev.startDate : ""; }).filter(d=>d && d >= today).sort(); return ds.length ? ds[0] : "9999-12-31"; };
+  const bs = view.bandSort || "updated";
+  if(bs==="name") bands.sort((a,b)=> a.name.localeCompare(b.name,"ja"));
+  else if(bs==="members") bands.sort((a,b)=> (b.members||[]).length - (a.members||[]).length || a.name.localeCompare(b.name,"ja"));
+  else if(bs==="songs") bands.sort((a,b)=> songCountOf(b) - songCountOf(a) || a.name.localeCompare(b.name,"ja"));
+  else if(bs==="nextLive") bands.sort((a,b)=> nextLiveKey(a).localeCompare(nextLiveKey(b)) || a.name.localeCompare(b.name,"ja"));
+  else bands.sort((a,b)=> String(b.updatedAt||"").localeCompare(String(a.updatedAt||"")));
   if(!bands.length) return `<div class="empty">該当するバンドがありません</div>`;
   return `<div class="meta" style="margin-bottom:8px">${bands.length}件</div>` + bands.map(b=>{
     const songCount = (b.songs||[]).length + (b.appearances||[]).reduce((n,a)=>n+(a.songs||[]).length,0);
@@ -269,13 +277,18 @@ function bandDetailHTML(b){
 
 /* ---------- メンバー ---------- */
 function peopleListHTML(){
-  let h = `<div class="row"><input type="search" class="grow" placeholder="名前で検索" value="${esc(view.peopleQuery)}" oninput="App.setPeopleQuery(this.value)"><button class="btn primary" onclick="App.newPerson()">＋ メンバー追加</button></div><div id="peopleResults">${peopleResultsHTML()}</div>`;
+  let h = `<div class="row"><input type="search" class="grow" placeholder="名前で検索" value="${esc(view.peopleQuery)}" oninput="App.setPeopleQuery(this.value)"><button class="btn primary" onclick="App.newPerson()">＋ メンバー追加</button></div>`;
+  h += `<div class="row" style="margin:8px 0 12px"><span class="meta">並び替え：</span><select style="width:auto;margin:0" onchange="App.setPeopleSort(this.value)">${[["grade","学年順（先輩から）"],["name","名前順"],["bands","参加バンド数順"]].map(o=>`<option value="${o[0]}" ${view.peopleSort===o[0]?"selected":""}>${o[1]}</option>`).join("")}</select></div><div id="peopleResults">${peopleResultsHTML()}</div>`;
   return h;
 }
 function peopleResultsHTML(){
   const q = view.peopleQuery.trim().toLowerCase();
-  const list = DB.people.filter(p=>!q || p.name.toLowerCase().includes(q))
-    .sort((a,b)=> (a.enrollmentYear||9999)-(b.enrollmentYear||9999) || a.name.localeCompare(b.name,"ja"));
+  const list = DB.people.filter(p=>!q || p.name.toLowerCase().includes(q));
+  const pplBandCount = p => DB.bands.filter(b=>(b.members||[]).some(m=>m.name===p.name)).length;
+  const ps = view.peopleSort || "grade";
+  if(ps==="name") list.sort((a,b)=> a.name.localeCompare(b.name,"ja"));
+  else if(ps==="bands") list.sort((a,b)=> pplBandCount(b) - pplBandCount(a) || a.name.localeCompare(b.name,"ja"));
+  else list.sort((a,b)=> (a.enrollmentYear||9999)-(b.enrollmentYear||9999) || a.name.localeCompare(b.name,"ja"));
   if(!list.length) return `<div class="empty">該当するメンバーがいません</div>`;
   return list.map(p=>{
     const bandCount = DB.bands.filter(b=>(b.members||[]).some(m=>m.name===p.name)).length;
@@ -338,24 +351,29 @@ function eventDetailHTML(ev){
 function collectSongs(){
   const map = new Map();
   DB.bands.forEach(b=>{
-    const add = (s, evName)=>{
+    const add = (s, evName, evDate)=>{
       const key = songKey(b, s);
       if(!map.has(key)) map.set(key, { title:s.title, artist:effArtist(b,s), occs:[] });
-      map.get(key).occs.push({ band:b, eventName:evName });
+      map.get(key).occs.push({ band:b, eventName:evName, date:evDate||"" });
     };
-    (b.appearances||[]).forEach(a=>{ const ev = eventById(a.eventId); (a.songs||[]).forEach(s=>add(s, ev?ev.name:"（ライブ不明）")); });
-    (b.songs||[]).forEach(s=>add(s, "ライブ以外"));
+    (b.appearances||[]).forEach(a=>{ const ev = eventById(a.eventId); (a.songs||[]).forEach(s=>add(s, ev?ev.name:"（ライブ不明）", ev?ev.startDate:"")); });
+    (b.songs||[]).forEach(s=>add(s, "ライブ以外", ""));
   });
   return [...map.values()];
 }
 function songsHTML(){
-  return `<div class="row"><input type="search" class="grow" placeholder="曲名・アーティスト・バンド名で検索" value="${esc(view.songQuery)}" oninput="App.setSongQuery(this.value)"></div><div id="songResults">${songResultsHTML()}</div>`;
+  return `<div class="row"><input type="search" class="grow" placeholder="曲名・アーティスト・バンド名で検索" value="${esc(view.songQuery)}" oninput="App.setSongQuery(this.value)"><select style="width:auto;margin:0" onchange="App.setSongSort(this.value)">${[["count","演奏回数順"],["recent","最近演奏した順"],["title","曲名順"],["artist","アーティスト順"]].map(o=>`<option value="${o[0]}" ${view.songSort===o[0]?"selected":""}>${o[1]}</option>`).join("")}</select></div><div id="songResults">${songResultsHTML()}</div>`;
 }
 function songResultsHTML(){
   const q = view.songQuery.trim().toLowerCase();
   let list = collectSongs();
   if(q) list = list.filter(s=> (s.title+" "+s.artist+" "+s.occs.map(o=>o.band.name).join(" ")).toLowerCase().includes(q));
-  list.sort((a,b)=> b.occs.length - a.occs.length || a.title.localeCompare(b.title,"ja"));
+  const latestDate = s => s.occs.reduce((mx,o)=> (o.date||"") > mx ? o.date : mx, "");
+  const ss = view.songSort || "count";
+  if(ss==="title") list.sort((a,b)=> a.title.localeCompare(b.title,"ja"));
+  else if(ss==="artist") list.sort((a,b)=> (a.artist||"").localeCompare(b.artist||"","ja") || a.title.localeCompare(b.title,"ja"));
+  else if(ss==="recent") list.sort((a,b)=> latestDate(b).localeCompare(latestDate(a)) || b.occs.length - a.occs.length || a.title.localeCompare(b.title,"ja"));
+  else list.sort((a,b)=> b.occs.length - a.occs.length || a.title.localeCompare(b.title,"ja"));
   if(!list.length) return `<div class="empty">該当する曲がありません</div>`;
   return `<div class="meta" style="margin:6px 0 10px">${list.length}曲</div>` + list.map(s=>`<div class="card"><h3>${esc(s.title)}${s.occs.length>1?`<span class="badge">通算${s.occs.length}回</span>`:""}</h3>
     ${s.artist?`<div><span class="chip">${esc(s.artist)}</span></div>`:""}
@@ -619,6 +637,9 @@ function showEditor(html){ document.getElementById("app").innerHTML = html; wind
 const App = {
   goTab(tab){ view.tab = tab; view.bandId = null; view.personId = null; view.eventId = null; render(); },
   setQuery(v){ view.query = v; const el = document.getElementById("bandResults"); if(el) el.innerHTML = bandResultsHTML(); },
+  setBandSort(v){ view.bandSort = v; const el = document.getElementById("bandResults"); if(el) el.innerHTML = bandResultsHTML(); },
+  setPeopleSort(v){ view.peopleSort = v; const el = document.getElementById("peopleResults"); if(el) el.innerHTML = peopleResultsHTML(); },
+  setSongSort(v){ view.songSort = v; const el = document.getElementById("songResults"); if(el) el.innerHTML = songResultsHTML(); },
   setStatusFilter(f){ view.statusFilter = f; render(); },
   openBand(id){ view.tab = "bands"; view.bandId = id; render(); },
   backToBands(){ view.bandId = null; render(); },
@@ -716,7 +737,7 @@ const App = {
         const d = JSON.parse(reader.result);
         if(!d || !Array.isArray(d.people) || !Array.isArray(d.events) || !Array.isArray(d.bands)) throw new Error("bad format");
         if(d.partial){ const r = mergeSharedData(d); saveDB(); view.tab = "bands"; view.bandId = null; render(); alert("共有データを取り込みました（バンド" + (r.addedBands + r.updatedBands) + "件／メンバー" + r.addedPeople + "人追加／ライブ" + r.addedEvents + "件追加）"); return; }
-        DB = d; saveDB(); view = { tab:"bands", bandId:null, personId:null, eventId:null, query:"", statusFilter:"all", songQuery:"", peopleQuery:"" }; render(); alert("読み込みました");
+        DB = d; saveDB(); view = { tab:"bands", bandId:null, personId:null, eventId:null, query:"", statusFilter:"all", songQuery:"", peopleQuery:"", bandSort:"updated", peopleSort:"grade", songSort:"count" }; render(); alert("読み込みました");
       }catch(e){ alert("読み込めませんでした（ファイル形式が違います）"); } };
     reader.readAsText(file); input.value = "";
   },
