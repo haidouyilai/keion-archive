@@ -429,7 +429,7 @@ function loadSettings(){ try{ return JSON.parse(localStorage.getItem(SETTINGS_KE
 function ownerName(){ return loadSettings().ownerName || ""; }
 function buildShareData(partnerName, selfName){
   const partner = DB.people.find(p=>p.name===partnerName); if(!partner) return null;
-  const bands = []; const eventIds = new Set(); const peopleNames = new Set([partnerName]);
+  const bands = []; const eventIds = new Set(); const peopleNames = new Set();
   DB.bands.forEach(b=>{
     const pm = (b.members||[]).find(m=>m.name===partnerName); if(!pm) return;
     const nb = clone(b);
@@ -447,7 +447,7 @@ function buildShareData(partnerName, selfName){
 }
 function mergeSharedData(d){
   let addedPeople = 0, addedEvents = 0, addedBands = 0, updatedBands = 0;
-  (d.people||[]).forEach(p=>{ if(!DB.people.some(x=>x.name===p.name)){ const np = clone(p); np.id = nextId("people"); DB.people.push(np); addedPeople++; } });
+  (d.people||[]).forEach(p=>{ if(p.name !== d.sharedTo && !DB.people.some(x=>x.name===p.name)){ const np = clone(p); np.id = nextId("people"); DB.people.push(np); addedPeople++; } });
   const evMap = {};
   (d.events||[]).forEach(ev=>{
     const ex = DB.events.find(x=>x.name===ev.name && x.startDate===ev.startDate);
