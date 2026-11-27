@@ -118,7 +118,7 @@ function loadDB(){
   return { people: clone(SEED_PEOPLE), events: clone(SEED_EVENTS), bands: clone(SEED_BANDS) };
 }
 let DB = loadDB();
-function saveDB(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(DB)); }catch(e){ alert("保存できませんでした（容量不足の可能性があります）"); } }
+function saveDB(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(DB)); if(window.__onDBSaved) window.__onDBSaved(); }catch(e){ alert("保存できませんでした（容量不足の可能性があります）"); } }
 function nextId(coll){ return DB[coll].reduce((m,x)=>Math.max(m,x.id||0),0)+1; }
 function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 function personByName(name){ return DB.people.find(p=>p.name===name) || null; }
@@ -406,7 +406,7 @@ function statsHTML(){
 
 /* ---------- データタブ ---------- */
 function dataHTML(){
-  return `<div class="notice">このアプリのデータは、この端末のこのブラウザ内にだけ保存されます。ブラウザのデータを消すと消えてしまうので、ときどき下のボタンで書き出し（バックアップ）を取ってください。</div>
+  return `<div class="notice">${Sync.enabled() ? "クラウド同期が有効です。変更は自動で同期されますが、念のため、ときどき下のボタンで書き出し（バックアップ）も取ってください。" : "このアプリのデータは、この端末のこのブラウザ内にだけ保存されます。ブラウザのデータを消すと消えてしまうので、ときどき下のボタンで書き出し（バックアップ）を取ってください。"}</div>
   <div class="card"><h3>データ管理</h3>
     <div class="meta">バンド ${DB.bands.length}件／メンバー ${DB.people.length}人／ライブ ${DB.events.length}件</div>
     <div class="row" style="margin-top:10px">
@@ -418,6 +418,7 @@ function dataHTML(){
       <button class="btn" onclick="App.exportCSV()">CSVで書き出す</button>
     </div>
   </div>
+  ${syncCardHTML()}
   <div class="card"><h3>知り合いに共有する</h3>
     <div class="meta">相手を選ぶと、その人が入っているバンドだけを抜き出したJSONを書き出します。目線は相手に合わせて変換されます（相手のパートが「自分のパート」になり、あなたはメンバーとして入ります）。受け取った人は「JSONを読み込む」から取り込めば、既存のデータに合体されます。</div>
     <div style="margin-top:10px"><label class="flabel">自分の名前（共有先でメンバーとして表示されます）</label><input type="text" id="share-self" value="${esc(ownerName())}" onchange="App.setOwnerName(this.value)"></div>
@@ -445,6 +446,125 @@ function dateStamp(){ const d=new Date(); const p=n=>String(n).padStart(2,"0"); 
 const SETTINGS_KEY = LS_KEY + ":settings";
 function loadSettings(){ try{ return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; }catch(e){ return {}; } }
 function ownerName(){ return loadSettings().ownerName || ""; }
+
+/* ---------- クラウド同期（GitHub非公開リポジトリ） ---------- */
+const SYNC_REPO = { owner: "haidouyilai", repo: "keion-archive-data", path: "data.json" };
+const Sync = {
+  timer: null, applying: false, busy: false, status: "",
+  cfg(){ return loadSettings().sync || {}; },
+  saveCfg(patch){ const s = loadSettings(); s.sync = Object.assign({}, s.sync || {}, patch); try{ localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); }catch(e){} },
+  token(){ return String(this.cfg().token || "").trim(); },
+  enabled(){ return !!this.token(); },
+  localUpdatedAt(){ return this.cfg().localUpdatedAt || ""; },
+  markLocalChanged(){ this.saveCfg({ localUpdatedAt: new Date().toISOString() }); },
+  statusText(){
+    if(this.status) return this.status;
+    const c = this.cfg();
+    if(c.lastError) return "エラー：" + c.lastError;
+    if(c.lastSyncAt) return "最終同期：" + new Date(c.lastSyncAt).toLocaleString("ja-JP");
+    return this.enabled() ? "キー設定済み（まだ同期していません）" : "未設定";
+  },
+  setStatus(msg){ this.status = msg; const el = document.getElementById("sync-status"); if(el) el.textContent = msg; },
+  b64encode(text){ const bytes = new TextEncoder().encode(text); let bin = ""; bytes.forEach(b => { bin += String.fromCharCode(b); }); return btoa(bin); },
+  b64decode(b64){ const bin = atob(String(b64 || "").replace(/\s/g, "")); const bytes = Uint8Array.from(bin, c => c.charCodeAt(0)); return new TextDecoder().decode(bytes); },
+  apiUrl(){ return "https://api.github.com/repos/" + SYNC_REPO.owner + "/" + SYNC_REPO.repo + "/contents/" + SYNC_REPO.path; },
+  async api(method, body){
+    return fetch(this.apiUrl(), { method, headers: { "Authorization": "Bearer " + this.token(), "Accept": "application/vnd.github+json", "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
+  },
+  async fetchRemote(){
+    const res = await this.api("GET");
+    if(res.status === 404) return null;
+    if(res.status === 401) throw new Error("キーが無効です（401）");
+    if(res.status === 403) throw new Error("権限が足りないか、利用制限中です（403）");
+    if(!res.ok) throw new Error("読み込みに失敗しました（HTTP " + res.status + "）");
+    const j = await res.json();
+    let data = null;
+    try{ data = JSON.parse(this.b64decode(j.content)); }catch(e){ throw new Error("同期データの形式が違います"); }
+    return { sha: j.sha, data };
+  },
+  payload(){ return { app: "keion-archive-friends", version: 1, updatedAt: this.localUpdatedAt() || new Date().toISOString(), ownerName: ownerName(), db: DB }; },
+  applyRemote(r){
+    const d = r && r.data;
+    if(!d || d.app !== "keion-archive-friends" || !d.db || !Array.isArray(d.db.people) || !Array.isArray(d.db.events) || !Array.isArray(d.db.bands)) throw new Error("同期データの形式が違います");
+    this.applying = true;
+    DB = d.db;
+    try{ localStorage.setItem(LS_KEY, JSON.stringify(DB)); }catch(e){}
+    if(d.ownerName){ const s = loadSettings(); s.ownerName = d.ownerName; try{ localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); }catch(e){} }
+    this.saveCfg({ localUpdatedAt: d.updatedAt || "", lastSyncAt: new Date().toISOString(), lastError: "" });
+    this.applying = false;
+    this.status = "同期済み：" + new Date().toLocaleString("ja-JP");
+    render();
+  },
+  async push(){
+    if(!this.enabled() || this.busy) return;
+    this.busy = true; this.setStatus("同期中…");
+    try{
+      const r = await this.fetchRemote();
+      if(r && r.data && String(r.data.updatedAt || "") > String(this.localUpdatedAt() || "")){
+        this.applyRemote(r);
+        return;
+      }
+      const p = this.payload();
+      const body = { message: "sync " + p.updatedAt, content: this.b64encode(JSON.stringify(p, null, 2)) };
+      if(r && r.sha) body.sha = r.sha;
+      let res = await this.api("PUT", body);
+      if(res.status === 409 || res.status === 422){
+        const r2 = await this.fetchRemote();
+        if(r2 && r2.sha){ body.sha = r2.sha; res = await this.api("PUT", body); }
+      }
+      if(res.status === 404) throw new Error("保管場所（" + SYNC_REPO.repo + "）が見つかりません。リポジトリの作成と、キーの対象リポジトリを確認してください");
+      if(res.status === 401) throw new Error("キーが無効です（401）");
+      if(res.status === 403) throw new Error("権限が足りないか、利用制限中です（403）");
+      if(!res.ok) throw new Error("保存に失敗しました（HTTP " + res.status + "）");
+      this.saveCfg({ lastSyncAt: new Date().toISOString(), lastError: "" });
+      this.status = "同期済み：" + new Date().toLocaleString("ja-JP");
+      this.setStatus(this.status);
+    }catch(e){
+      this.saveCfg({ lastError: String(e && e.message || e) });
+      this.status = "エラー：" + String(e && e.message || e);
+      this.setStatus(this.status);
+    }finally{ this.busy = false; }
+  },
+  async pullPush(){
+    if(!this.enabled() || this.busy) return;
+    this.busy = true; this.setStatus("同期中…");
+    try{
+      const r = await this.fetchRemote();
+      if(!r){ this.busy = false; await this.push(); return; }
+      const remoteAt = String((r.data && r.data.updatedAt) || "");
+      const localAt = String(this.localUpdatedAt() || "");
+      if(remoteAt > localAt){ this.busy = false; this.applyRemote(r); return; }
+      this.busy = false;
+      if(remoteAt < localAt){ await this.push(); return; }
+      this.saveCfg({ lastSyncAt: new Date().toISOString(), lastError: "" });
+      this.status = "同期済み：" + new Date().toLocaleString("ja-JP");
+      this.setStatus(this.status);
+    }catch(e){
+      this.saveCfg({ lastError: String(e && e.message || e) });
+      this.status = "エラー：" + String(e && e.message || e);
+      this.setStatus(this.status);
+    }finally{ this.busy = false; }
+  },
+  schedule(){
+    if(!this.enabled() || this.applying) return;
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => this.push(), 2500);
+  }
+};
+window.__onDBSaved = function(){ Sync.markLocalChanged(); Sync.schedule(); };
+function syncCardHTML(){
+  const has = Sync.enabled();
+  return `<div class="card"><h3>クラウド同期（PC・スマホで共有）</h3>
+    <div class="meta">データを非公開の保管場所（GitHubのリポジトリ「${esc(SYNC_REPO.repo)}」）に保存して、PCとiPhoneで同じ内容を使えるようにします。接続用のキー（トークン）はこの端末の中にだけ保存され、同期データには含まれません。キーを設定していない端末では、今まで通り端末内だけで動きます。</div>
+    <div style="margin-top:10px"><label class="flabel">同期キー（トークン）</label><input type="password" id="sync-token" value="${esc(Sync.token())}" placeholder="github_pat_…" autocomplete="off"></div>
+    <div class="row" style="margin-top:10px">
+      <button class="btn primary" onclick="App.syncSaveToken()">キーを保存して同期</button>
+      <button class="btn" onclick="App.syncNow()">今すぐ同期</button>
+      ${has ? '<button class="btn danger" onclick="App.syncClear()">同期をやめる</button>' : ''}
+    </div>
+    <div class="meta" id="sync-status" style="margin-top:8px">${esc(Sync.statusText())}</div>
+  </div>`;
+}
 function buildShareData(partnerName, selfName){
   const partner = DB.people.find(p=>p.name===partnerName); if(!partner) return null;
   const bands = []; const eventIds = new Set(); const peopleNames = new Set();
@@ -734,6 +854,9 @@ const App = {
   setSongQuery(v){ view.songQuery = v; const el = document.getElementById("songResults"); if(el) el.innerHTML = songResultsHTML(); },
   exportJSON(){ downloadFile("band-archive-" + dateStamp() + ".json", JSON.stringify(DB, null, 2), "application/json"); },
   setOwnerName(v){ const s = loadSettings(); s.ownerName = String(v||"").trim(); try{ localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); }catch(e){} },
+  async syncSaveToken(){ const v = (document.getElementById("sync-token").value || "").trim(); if(!v){ alert("キーを入力してください"); return; } Sync.saveCfg({ token: v, lastError: "" }); await Sync.pullPush(); render(); },
+  async syncNow(){ if(!Sync.enabled()){ alert("先にキーを保存してください"); return; } await Sync.pullPush(); render(); },
+  syncClear(){ if(!confirm("この端末のクラウド同期をやめますか？（データ自体は消えません）")) return; Sync.saveCfg({ token: "", lastError: "" }); Sync.status = ""; render(); },
   exportShareJSON(){
     const selfName = (document.getElementById("share-self").value || "").trim();
     const partnerName = document.getElementById("share-partner").value;
@@ -784,6 +907,7 @@ const App = {
 };
 window.App = App;
 render();
+if(Sync.enabled()) Sync.pullPush();
 </script>
 </body>
 </html>
