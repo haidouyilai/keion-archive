@@ -456,6 +456,9 @@ const Sync = {
   token(){ return String(this.cfg().token || "").trim(); },
   enabled(){ return !!this.token(); },
   localUpdatedAt(){ return this.cfg().localUpdatedAt || ""; },
+  neverSynced(){ return !this.cfg().localUpdatedAt && !this.cfg().lastSyncAt; },
+  countOf(db){ return ((db && db.people) || []).length + ((db && db.events) || []).length + ((db && db.bands) || []).length; },
+  shouldPreferLocal(remoteDb){ return this.neverSynced() && this.countOf(DB) > this.countOf(remoteDb); },
   markLocalChanged(){ this.saveCfg({ localUpdatedAt: new Date().toISOString() }); },
   statusText(){
     if(this.status) return this.status;
@@ -500,7 +503,7 @@ const Sync = {
     this.busy = true; this.setStatus("同期中…");
     try{
       const r = await this.fetchRemote();
-      if(r && r.data && String(r.data.updatedAt || "") > String(this.localUpdatedAt() || "")){
+      if(r && r.data && String(r.data.updatedAt || "") > String(this.localUpdatedAt() || "") && !this.shouldPreferLocal(r.data.db)){
         this.applyRemote(r);
         return;
       }
@@ -516,7 +519,7 @@ const Sync = {
       if(res.status === 401) throw new Error("キーが無効です（401）");
       if(res.status === 403) throw new Error("権限が足りないか、利用制限中です（403）");
       if(!res.ok) throw new Error("保存に失敗しました（HTTP " + res.status + "）");
-      this.saveCfg({ lastSyncAt: new Date().toISOString(), lastError: "" });
+      this.saveCfg({ localUpdatedAt: p.updatedAt, lastSyncAt: new Date().toISOString(), lastError: "" });
       this.status = "同期済み：" + new Date().toLocaleString("ja-JP");
       this.setStatus(this.status);
     }catch(e){
@@ -533,9 +536,9 @@ const Sync = {
       if(!r){ this.busy = false; await this.push(); return; }
       const remoteAt = String((r.data && r.data.updatedAt) || "");
       const localAt = String(this.localUpdatedAt() || "");
-      if(remoteAt > localAt){ this.busy = false; this.applyRemote(r); return; }
+      if(remoteAt > localAt && !this.shouldPreferLocal(r.data && r.data.db)){ this.busy = false; this.applyRemote(r); return; }
       this.busy = false;
-      if(remoteAt < localAt){ await this.push(); return; }
+      if(remoteAt < localAt || this.shouldPreferLocal(r.data && r.data.db)){ await this.push(); return; }
       this.saveCfg({ lastSyncAt: new Date().toISOString(), lastError: "" });
       this.status = "同期済み：" + new Date().toLocaleString("ja-JP");
       this.setStatus(this.status);
